@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+set -eu
+set -o pipefail
+
+if ! which lpass >/dev/null; then
+  echo "lpass-cli is required"
+fi
+
+LPASS_CF_ENTRY="${LPASS_CF_ENTRY:-"kirederik@gmail.com/Scaleway/PWS derik"}"
+
+main() {
+  pws_login
+}
+
+pws_login() {
+  local username password
+  username="$(lpass show --username "${LPASS_CF_ENTRY}")"
+  password="$(lpass show --password "${LPASS_CF_ENTRY}")"
+
+  cf login -a https://api.run.pivotal.io -u "$username" -p "$password" -o devangelista -s development
+}
+
+if [ "$0" = "${BASH_SOURCE[0]}" ]; then
+  main
+fi

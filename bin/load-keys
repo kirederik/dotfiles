@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+set -eu
+
+ensure-lpass-login
+
+private_key_path="/tmp/ssh_key"
+lpass show "github/load" --notes > "$private_key_path"
+chmod 400 "$private_key_path"
+
+ssh-add "$private_key_path"

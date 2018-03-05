@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+log() {
+  msg=$1
+  shift
+  echo ""
+  echo "--------"
+  echo "$msg"
+  echo "--------"
+  echo ""
+}
+
+command_exists () {
+  type "$1" &> /dev/null ;
+}
+
+update_gems() {
+  gem install bundler
+  gem install tmuxinator
+}
+
+update_homebrew() {
+  if ! command_exists brew ; then
+    log "installing Homebrew..."
+    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+  else
+    log "Updating Homebrew"
+    log "upgrading all brew dependencies..."
+    brew tap Homebrew/bundle
+    brew update
+    set +e
+    (cd ~ && brew bundle)
+    set -e
+  fi
+}
+
+update_vim() {
+  if [ ! -d ~/.vim ]; then
+    log "cloning luan/vimfiles..."
+    git clone https://github.com/luan/vimfiles.git ~/.vim
+  else
+    log "updating luan/vimfiles..."
+    ~/.vim/update
+  fi
+  pip install neovim --user
+  vim +UpdateRemotePlugins +qall
+}
+
+install_langs() {
+  log "Install Python 3"
+  pyenv install --skip-existing 3.6.2
+  pyenv global 3.6.2
+
+  log "Installing Go 1.10"
+  rm -rf /usr/local/go
+  curl https://dl.google.com/go/go1.10.darwin-amd64.tar.gz > ~/Downloads/go1.10.darwin-amd64.tar.gz
+  tar -C /usr/local -xzf ~/Downloads/go1.10.darwin-amd64.tar.gz
+}
+
+update_zsh() {
+  log "updating zsh"
+  sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+}
+
+main() {
+  sudo chown $(whoami):admin /usr/local
+
+  log "installing xcode CLI tools..."
+  xcode-select --install || true
+
+  update_homebrew
+  update_vim
+  install_langs
+  update_gems
+  update_zsh
+}
+
+main "$@"

@@ -1,0 +1,2 @@
+
+let g:neomake_html_tidy_ignore_errors = [ 'missing <!DOCTYPE> declaration' ]

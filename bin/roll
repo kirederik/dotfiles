@@ -22,12 +22,10 @@ update_gems() {
 }
 
 update_homebrew() {
+  log "Updating Homebrew"
   if ! command_exists brew ; then
-    log "installing Homebrew..."
     /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
   else
-    log "Updating Homebrew"
-    log "upgrading all brew dependencies..."
     brew tap Homebrew/bundle
     brew update
     set +e
@@ -54,7 +52,6 @@ install_langs() {
   pyenv global 3.6.2
 
   log "Installing Go 1.10"
-  rm -rf /usr/local/go
   curl https://dl.google.com/go/go1.10.darwin-amd64.tar.gz > ~/Downloads/go1.10.darwin-amd64.tar.gz
   tar -C /usr/local -xzf ~/Downloads/go1.10.darwin-amd64.tar.gz
 }
@@ -65,8 +62,6 @@ update_zsh() {
 }
 
 main() {
-  sudo chown $(whoami):admin /usr/local
-
   log "installing xcode CLI tools..."
   xcode-select --install || true
 

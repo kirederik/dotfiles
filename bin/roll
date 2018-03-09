@@ -19,6 +19,7 @@ command_exists () {
 update_gems() {
   gem install bundler
   gem install tmuxinator
+  gem install lunchy
 }
 
 update_homebrew() {

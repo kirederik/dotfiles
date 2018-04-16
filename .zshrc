@@ -122,7 +122,14 @@ odb() {
   cd ~/dev/pivotal/on-demand-service-broker-release/
 }
 
-export GPG_TTY=$(tty)
+if test -f ~/.gnupg/.gpg-agent-info -a -n "$(pgrep gpg-agent)"; then
+  source ~/.gnupg/.gpg-agent-info
+  export GPG_AGENT_INFO
+  GPG_TTY=$(tty)
+  export GPG_TTY
+else
+  eval $(gpg-agent --daemon 2>/dev/null)
+fi
 
 export JAVA_HOME8=`/usr/libexec/java_home --version 1.8`
 export JAVA_HOME=$JAVA_HOME8

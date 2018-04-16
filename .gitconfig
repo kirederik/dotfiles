@@ -1,0 +1,27 @@
+# This is Git's per-user configuration file.
+[user]
+# Please adapt and uncomment the following lines:
+  name = Derik Evangelista
+  email = devangelista@pivotal.io
+	signingkey = 394E43194FC835B2
+#	name = Pivotal
+#	email = pivotal@macbook-air-110.home
+[core]
+  editor = /usr/bin/vim
+  excludesfile = /Users/pivotal/.gitignore_global
+[alias]
+  st = status
+  ci = commit -S
+  lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+  co = checkout
+  unstage = reset HEAD --
+[push]
+  default = matching
+[commit]
+  template = ~/.gitmessage
+  gpgsign = true
+[difftool "sourcetree"]
+  cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+[mergetool "sourcetree"]
+  cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+  trustExitCode = true

@@ -1,5 +1,0 @@
-Plug 'gevans/vim-ginkgo'
-Plug 'dracula/vim'
-Plug 'rust-lang/rust'
-Plug 'elixir-editors/vim-elixir'
-Plug 'kergoth/vim-hilinks'

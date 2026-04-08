@@ -14,7 +14,7 @@ eval "$(mise activate zsh)"
 eval "$(starship init zsh)"
 
 # ─── Shell history (replaces ctrl+r) ──────────────────────────────────────────
-eval "$(atuin init zsh)"
+eval "$(atuin init zsh --disable-up-arrow)"
 
 # ─── Smart cd ─────────────────────────────────────────────────────────────────
 eval "$(zoxide init zsh --cmd cd)"

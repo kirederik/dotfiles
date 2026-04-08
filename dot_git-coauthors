@@ -16,6 +16,10 @@
       "name": "Colin Humphreys",
       "email": "colin@syntasso.io"
     },
+    "wb": {
+      "name": "Winna Bridgewater",
+      "email": "winna@syntasso.io"
+    },
     "pk": {
       "name": "Paula Kennedy",
       "email": "paula@syntasso.io"
@@ -23,6 +27,10 @@
     "jk": {
       "name": "Jake Klein",
       "email": "jake@syntasso.io"
+    },
+    "rb": {
+      "name": "Rich Barton-Cooper",
+      "email": "rich@syntasso.io"
     },
     "smb": {
       "name": "Sapphire Mason-Brown",
@@ -43,6 +51,10 @@
     "se": {
       "name": "Stella Englezou",
       "email": "stella@syntasso.io"
+    },
+    "lr": {
+      "name": "Luigi Riefolo",
+      "email": "luigi@syntasso.io"
     }
   }
 }

@@ -1,0 +1,42 @@
+#!/usr/bin/env python3
+"""Update jj's ui.default-description with Co-authored-by trailers.
+
+Usage:
+  mob-jj ab cat    # set trailers for aliases ab and cat
+  mob-jj           # clear trailers
+"""
+import json, re, pathlib, sys
+
+roster_path = pathlib.Path.home() / ".git-coauthors"
+config_path = pathlib.Path.home() / ".config/jj/config.toml"
+
+aliases = sys.argv[1:]
+
+config = config_path.read_text()
+# Remove any existing default-description entry
+config = re.sub(
+    r"\ndefault-description\s*=\s*\"\"\".*?\"\"\"\n?",
+    "\n",
+    config,
+    flags=re.DOTALL,
+)
+
+if not aliases:
+    config_path.write_text(config)
+    sys.exit(0)
+
+roster = json.loads(roster_path.read_text())["coauthors"]
+lines = []
+for alias in aliases:
+    entry = roster.get(alias)
+    if entry:
+        lines.append(f"Co-authored-by: {entry['name']} <{entry['email']}>")
+    else:
+        print(f"mob-jj: unknown alias '{alias}'", file=sys.stderr)
+
+if not lines:
+    sys.exit(1)
+
+desc = '"""\n\n' + "\n".join(lines) + '\n"""'
+config = config.replace("[ui]", "[ui]\ndefault-description = " + desc, 1)
+config_path.write_text(config)

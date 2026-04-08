@@ -79,6 +79,17 @@ alias npx='bunx'
 alias g='git'
 alias lg='lazygit'
 
+# Mob programming — keeps git mob and jj in sync
+function mob() {
+  if [[ $# -eq 0 ]]; then
+    git mob --clear 2>/dev/null || true
+    mob-jj
+    echo "Mob session ended"
+  else
+    git mob "$@" && mob-jj "$@"
+  fi
+}
+
 # Kubernetes
 alias k='kubectl'
 alias kx='kubectx'

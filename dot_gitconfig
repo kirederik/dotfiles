@@ -39,6 +39,7 @@
 	autoStash = true
 
 [alias]
+	ci   = commit
 	st   = status
 	co   = checkout
 	br   = branch

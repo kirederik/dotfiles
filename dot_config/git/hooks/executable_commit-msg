@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+# Global commitlint hook — enforces Conventional Commits across all repos.
+# Installed via: git config --global core.hooksPath ~/.config/git/hooks
+commitlint --edit "$1"

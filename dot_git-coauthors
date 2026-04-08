@@ -1,0 +1,48 @@
+{
+  "coauthors": {
+    "ab": {
+      "name": "Abby Bangser",
+      "email": "abby@syntasso.io"
+    },
+    "cat": {
+      "name": "Cat Morris",
+      "email": "cat@syntasso.io"
+    },
+    "cgh": {
+      "name": "Chris Hedley",
+      "email": "chris@syntasso.io"
+    },
+    "ch": {
+      "name": "Colin Humphreys",
+      "email": "colin@syntasso.io"
+    },
+    "pk": {
+      "name": "Paula Kennedy",
+      "email": "paula@syntasso.io"
+    },
+    "jk": {
+      "name": "Jake Klein",
+      "email": "jake@syntasso.io"
+    },
+    "smb": {
+      "name": "Sapphire Mason-Brown",
+      "email": "sapphire@syntasso.io"
+    },
+    "cl": {
+      "name": "Chunyi Lyu",
+      "email": "chunyi@syntasso.io"
+    },
+    "sd": {
+      "name": "Shane Dowling",
+      "email": "shane@syntasso.io"
+    },
+    "jm": {
+      "name": "John Mikos",
+      "email": "john@syntasso.io"
+    },
+    "se": {
+      "name": "Stella Englezou",
+      "email": "stella@syntasso.io"
+    }
+  }
+}

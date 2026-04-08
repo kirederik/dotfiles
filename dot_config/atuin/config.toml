@@ -1,0 +1,20 @@
+# Atuin config
+# Docs: https://docs.atuin.sh/configuration/config/
+
+# Don't auto-sync — history stays local unless you opt in
+auto_sync = true
+
+# Deduplicate consecutive identical commands
+filter_mode = "global"
+
+# Show results newest-first
+history_filter = []
+
+# Fuzzy search by default (ctrl+r)
+search_mode = "fuzzy"
+
+# Show a preview of the selected command
+show_preview = true
+
+# Don't record commands prefixed with a space (like bash HISTCONTROL=ignorespace)
+secrets_filter = true

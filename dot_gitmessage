@@ -1,0 +1,8 @@
+
+# Subject line: imperative mood, 50 chars max, no period, conventional commits
+# e.g. "fix: null pointer in auth middleware"
+#
+# Body: wrap at 72 chars, explain WHAT and WHY (not how)
+# Leave a blank line between subject and body.
+#
+# Refs: closes #123, fixes #456

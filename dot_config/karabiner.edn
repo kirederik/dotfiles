@@ -1,0 +1,19 @@
+;; Karabiner complex modifications — Goku EDN format.
+;; Only needed if you add complex rules (tap-hold, layers, app-specific shortcuts).
+;; Simple remaps live in dot_config/karabiner/karabiner.json directly.
+;;
+;; To use: add rules below, then run `goku` to compile into karabiner.json.
+;; Docs: https://github.com/yqrashawn/GokuRakuJoudo/blob/master/tutorial.md
+
+{
+  :profiles {
+    :Default { :default true :sim 50 :delay 80 :alone 250 :held 250 }
+  }
+
+  :main [
+    ;; Example — uncomment to enable:
+    ;; Tap caps_lock = Escape, hold caps_lock = Left Control
+    ;; {:des "caps_lock: tap=escape, hold=ctrl"
+    ;;  :rules [[:##caps_lock :left_control nil {:alone :escape}]]}
+  ]
+}

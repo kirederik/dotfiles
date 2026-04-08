@@ -1,0 +1,115 @@
+# ─── Homebrew (Apple Silicon) ─────────────────────────────────────────────────
+if [[ -f /opt/homebrew/bin/brew ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+
+# ─── Antidote plugin manager ──────────────────────────────────────────────────
+source "$(brew --prefix)/opt/antidote/share/antidote/antidote.zsh"
+antidote load
+
+# ─── Mise runtime manager ─────────────────────────────────────────────────────
+eval "$(mise activate zsh)"
+
+# ─── Prompt ───────────────────────────────────────────────────────────────────
+eval "$(starship init zsh)"
+
+# ─── Shell history (replaces ctrl+r) ──────────────────────────────────────────
+eval "$(atuin init zsh)"
+
+# ─── Smart cd ─────────────────────────────────────────────────────────────────
+eval "$(zoxide init zsh --cmd cd)"
+
+# ─── direnv ───────────────────────────────────────────────────────────────────
+eval "$(direnv hook zsh)"
+
+# ─── Completions ──────────────────────────────────────────────────────────────
+autoload -Uz compinit && compinit
+
+# ─── zsh options ──────────────────────────────────────────────────────────────
+setopt AUTO_CD          # type a dir name to cd into it
+setopt CORRECT          # suggest correction for mistyped commands
+setopt NO_BEEP          # silence all bells
+setopt GLOB_DOTS        # include dotfiles in glob matches
+
+# ─── Pager ────────────────────────────────────────────────────────────────────
+export LESS='-R --use-color'
+export MANPAGER='less -R --use-color -Dd+r -Du+b'
+
+# ─── Editor ───────────────────────────────────────────────────────────────────
+export EDITOR='nvim'
+export VISUAL='nvim'
+
+# ─── fzf ──────────────────────────────────────────────────────────────────────
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+export FZF_DEFAULT_OPTS="
+  --layout=reverse
+  --border=rounded
+  --height=40%
+  --info=inline
+  --prompt='❯ '
+  --pointer='▶'
+  --color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8
+  --color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc
+  --color=marker:#f5e0dc,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8
+"
+# ctrl+t: paste file path; alt+c: cd into dir
+source "$(brew --prefix)/opt/fzf/shell/completion.zsh" 2>/dev/null
+source "$(brew --prefix)/opt/fzf/shell/key-bindings.zsh" 2>/dev/null
+
+# ─── Modern CLI aliases ───────────────────────────────────────────────────────
+alias gcat="cat"
+alias cat='bat'
+alias ls='eza'
+alias ll='eza -la --git'
+alias la='eza -la --git'
+alias lt='eza --tree'
+alias ggrep='grep'
+alias grep='rg'
+alias du='dust'
+alias top='btop'
+alias curl='xh'
+
+# Node/bun — only this alias; do NOT alias node→bun (fragile)
+alias npx='bunx'
+
+# Git shortcuts
+alias g='git'
+alias lg='lazygit'
+
+# Kubernetes
+alias k='kubectl'
+alias kx='kubectx'
+alias kn='kubens'
+alias kp="kubectl --context kind-platform"
+alias kw="kubectl --context kind-work"
+command -v kubectl &>/dev/null && source <(kubectl completion zsh) && compdef k=kubectl
+
+# ─── ghq + fzf: ctrl+g → fuzzy repo jumper ────────────────────────────────────
+export GHQ_ROOT="$HOME/dev"
+
+function _ghq_fzf() {
+  local repo
+  repo=$(ghq list | fzf --height 40% --reverse --query "$LBUFFER") || return
+  BUFFER="cd $(ghq root)/$repo"
+  zle accept-line
+}
+zle -N _ghq_fzf
+bindkey '^g' _ghq_fzf
+
+# ─── Bitwarden SSH agent ──────────────────────────────────────────────────────
+# Only override SSH_AUTH_SOCK if the Bitwarden socket exists (i.e. app is running).
+_bw_sock="$HOME/Library/Group Containers/LNH8B75VMSP.group.com.bitwarden.desktop/T/bitwarden-ssh-agent.sock"
+if [[ -S "$_bw_sock" ]]; then
+  export SSH_AUTH_SOCK="$_bw_sock"
+fi
+unset _bw_sock
+
+# ─── krew ─────────────────────────────────────────────────────────────────────
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+
+# ─── Go ───────────────────────────────────────────────────────────────────────
+export GOPATH="$HOME/go"
+export PATH="$GOPATH/bin:$PATH"
+
+# ─── PATH extras ──────────────────────────────────────────────────────────────
+export PATH="$HOME/.local/bin:$PATH"

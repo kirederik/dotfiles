@@ -1,0 +1,155 @@
+// Zellij config
+// Uses Zellij's built-in Tmux mode as a prefix layer.
+// Workflow: Ctrl+Space arms the leader, next key acts and drops back to Normal —
+// identical to how C-space works as a tmux prefix.
+// Docs: https://zellij.dev/documentation/
+
+theme "catppuccin-mocha"
+simplified_ui true
+copy_on_select true
+scroll_buffer_size 10000
+pane_frames false
+
+on_force_close "detach"
+
+// ── zellij-autolock ────────────────────────────────────────────────────────
+// Automatically switches to Locked mode when a full-screen TUI is focused,
+// so every keystroke goes to the app instead of being intercepted by Zellij.
+// Switches back to Normal when the app exits.
+plugins {
+    autolock location="https://github.com/fresh2dev/zellij-autolock/releases/download/0.3.2/zellij-autolock.wasm" {
+        triggers         "nvim|vim|vi|fzf|lazygit|k9s|btop|atuin"
+        watch_interval_ms 300
+        // Set to true to start in locked mode
+        lock_on_start    false
+    }
+}
+
+load_plugins {
+    "autolock"
+}
+
+keybinds clear-defaults=false {
+
+    // ── Normal mode ────────────────────────────────────────────────────────
+    normal {
+        // Ctrl+Space arms the leader — mirrors tmux prefix
+        bind "Ctrl Space" { SwitchToMode "Tmux"; }
+
+        // Zellij's own mode UI (keep accessible)
+        bind "Ctrl p" { SwitchToMode "Pane"; }
+        bind "Ctrl t" { SwitchToMode "Tab"; }
+        bind "Ctrl n" { SwitchToMode "Resize"; }
+        bind "Ctrl o" { SwitchToMode "Session"; }
+        bind "Ctrl q" { Quit; }
+    }
+
+    // ── Locked mode ────────────────────────────────────────────────────────
+    // All keys pass through to the terminal. Managed automatically by
+    // zellij-autolock. Ctrl+g to manually unlock if needed.
+    locked {
+        bind "Ctrl g" { SwitchToMode "Normal"; }
+    }
+
+    // ── Tmux (leader) mode ─────────────────────────────────────────────────
+    // Armed by Ctrl+Space. Each binding executes and returns to Normal,
+    // matching the tmux one-shot prefix model.
+    tmux {
+        // Cancel / re-press prefix to abort
+        bind "Esc" "Ctrl Space" { SwitchToMode "Normal"; }
+
+        // Pane navigation  (was C-M-h/j/k/l unprefixed)
+        bind "h" { MoveFocus "Left";  SwitchToMode "Normal"; }
+        bind "j" { MoveFocus "Down";  SwitchToMode "Normal"; }
+        bind "k" { MoveFocus "Up";    SwitchToMode "Normal"; }
+        bind "l" { MoveFocus "Right"; SwitchToMode "Normal"; }
+        bind "o" { FocusNextPane;     SwitchToMode "Normal"; }  // cycle panes
+
+        // Pane management
+        bind "x" { CloseFocus;              SwitchToMode "Normal"; }  // kill pane
+        bind "z" { ToggleFocusFullscreen;   SwitchToMode "Normal"; }  // zoom
+        bind "v" { NewPane "Right";         SwitchToMode "Normal"; }  // vertical split
+        bind "-" { NewPane "Down";          SwitchToMode "Normal"; }  // horizontal split
+        bind "f" { ToggleFloatingPanes;     SwitchToMode "Normal"; }  // floating pane
+
+        // Tab (window) navigation  (was C-M-n/p and M-Tab unprefixed)
+        bind "n"   { GoToNextTab;       SwitchToMode "Normal"; }
+        bind "p"   { GoToPreviousTab;   SwitchToMode "Normal"; }
+        bind "Tab" { GoToPreviousTab;   SwitchToMode "Normal"; }  // last window
+        bind "c"   { NewTab;            SwitchToMode "Normal"; }
+
+        // Tab reordering  (was M-< / M-> unprefixed)
+        bind "<" { MoveTab "Left";  SwitchToMode "Normal"; }
+        bind ">" { MoveTab "Right"; SwitchToMode "Normal"; }
+
+        // Scroll / copy mode  (was C-M-[ unprefixed)
+        // Note: selection in scroll mode uses mouse or Shift+arrow — there's
+        // no 'v' visual-select like in tmux. 'y' copies and exits.
+        bind "[" { SwitchToMode "Scroll"; }
+
+        // Session manager  (replaces tmux session management)
+        bind "s" "g" { SwitchToMode "Session"; }
+    }
+
+    // ── Scroll mode (copy mode equivalent) ────────────────────────────────
+    scroll {
+        bind "Esc" "q"    { SwitchToMode "Normal"; }
+        bind "e"          { EditScrollback; }       // open buffer in $EDITOR
+        bind "j" "Down"   { ScrollDown; }
+        bind "k" "Up"     { ScrollUp; }
+        bind "Ctrl d"     { HalfPageScrollDown; }
+        bind "Ctrl u"     { HalfPageScrollUp; }
+        bind "Ctrl f"     { PageScrollDown; }
+        bind "Ctrl b"     { PageScrollUp; }
+        bind "G"          { ScrollToBottom; }
+        bind "g"          { ScrollToTop; }
+        bind "/"          { SwitchToMode "EnterSearch"; }
+    }
+
+    // ── Search mode ────────────────────────────────────────────────────────
+    search {
+        bind "Esc" "Enter" { SwitchToMode "Scroll"; }
+        bind "n"           { Search "down"; }
+        bind "N"           { Search "up"; }
+    }
+
+    // ── Pane mode ─────────────────────────────────────────────────────────
+    pane {
+        bind "Esc" "Ctrl p" { SwitchToMode "Normal"; }
+        bind "h" "Left"  { MoveFocus "Left"; }
+        bind "j" "Down"  { MoveFocus "Down"; }
+        bind "k" "Up"    { MoveFocus "Up"; }
+        bind "l" "Right" { MoveFocus "Right"; }
+        bind "v"         { NewPane "Right"; SwitchToMode "Normal"; }
+        bind "-"         { NewPane "Down";  SwitchToMode "Normal"; }
+        bind "x"         { CloseFocus;      SwitchToMode "Normal"; }
+        bind "z"         { ToggleFocusFullscreen; SwitchToMode "Normal"; }
+        bind "f"         { ToggleFloatingPanes;   SwitchToMode "Normal"; }
+        bind "r"         { SwitchToMode "RenamePane"; }
+    }
+
+    // ── Tab mode ──────────────────────────────────────────────────────────
+    tab {
+        bind "Esc" "Ctrl t" { SwitchToMode "Normal"; }
+        bind "n"            { NewTab; SwitchToMode "Normal"; }
+        bind "x"            { CloseTab; SwitchToMode "Normal"; }
+        bind "h" "Left"     { GoToPreviousTab; }
+        bind "l" "Right"    { GoToNextTab; }
+        bind "<"            { MoveTab "Left"; }
+        bind ">"            { MoveTab "Right"; }
+        bind "r"            { SwitchToMode "RenameTab"; }
+    }
+
+    // ── Resize mode ───────────────────────────────────────────────────────
+    resize {
+        bind "Esc" "Ctrl n" { SwitchToMode "Normal"; }
+        bind "h" "Left"  { Resize "Increase Left"; }
+        bind "j" "Down"  { Resize "Increase Down"; }
+        bind "k" "Up"    { Resize "Increase Up"; }
+        bind "l" "Right" { Resize "Increase Right"; }
+        bind "H"         { Resize "Decrease Left"; }
+        bind "J"         { Resize "Decrease Down"; }
+        bind "K"         { Resize "Decrease Up"; }
+        bind "L"         { Resize "Decrease Right"; }
+    }
+}

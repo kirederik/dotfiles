@@ -1,0 +1,4 @@
+{
+    /* ctrl+w — delete word backward (like terminal / readline) */
+    "^w" = "deleteWordBackward:";
+}

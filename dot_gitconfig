@@ -1,0 +1,52 @@
+[core]
+	editor = nvim
+	pager = delta
+	excludesfile = ~/.gitignore_global
+	hooksPath = ~/.config/git/hooks
+
+[commit]
+	template = ~/.gitmessage
+
+[interactive]
+	diffFilter = delta --color-only
+
+[delta]
+	navigate = true
+	light = false
+	side-by-side = true
+
+[merge]
+	conflictstyle = zdiff3
+
+[diff]
+	colorMoved = default
+
+[init]
+	defaultBranch = main
+
+[push]
+	default = current
+	autoSetupRemote = true
+
+[pull]
+	rebase = true
+
+[rebase]
+	autoStash = true
+
+[alias]
+	st   = status
+	co   = checkout
+	br   = branch
+	lg   = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+	undo = reset HEAD~1 --mixed
+
+[ghq]
+	root = ~/dev
+
+# ─── Identity switching by directory ─────────────────────────────────────────
+[includeIf "gitdir:~/dev/github.com/kirederik/"]
+	path = ~/.gitconfig-personal
+
+[includeIf "gitdir:~/dev/github.com/syntasso/"]
+	path = ~/.gitconfig-work

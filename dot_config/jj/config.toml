@@ -1,0 +1,16 @@
+[user]
+name = "Derik Evangelista"
+email = "derik@syntasso.io"  # override per-repo with jj config --repo
+
+[ui]
+diff-editor = ":builtin"
+merge-editor = "nvim"
+pager = "delta"
+
+[merge-tools.delta]
+program = "delta"
+
+[aliases]
+# Shortcuts matching jj's own conventions
+tug = ["git", "fetch"]
+sync = ["git", "push", "--all"]

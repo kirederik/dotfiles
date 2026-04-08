@@ -1,0 +1,11 @@
+bootstrap.sh
+Brewfile
+macos.sh
+go-tools.sh
+kube-tools.sh
+README.md
+CONTEXT.md
+.git
+.claude
+private_dot_ssh/sockets
+dot_local/bin/.gitkeep

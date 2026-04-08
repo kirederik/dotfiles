@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+rise() {
+    if [[ "$PWD" == "$HOME" ]]; then
+        echo "nowhere else to rise"
+        return
+    fi
+
+    if [[ ! -d .git ]]; then
+        cd ..
+        rise
+    fi
+}
+

@@ -3,6 +3,7 @@ Brewfile
 macos.sh
 go-tools.sh
 kube-tools.sh
+python-tools.sh
 README.md
 CONTEXT.md
 .git

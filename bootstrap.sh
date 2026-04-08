@@ -39,6 +39,10 @@ mise install
 echo "==> Installing Go tools..."
 bash "$DOTFILES_DIR/go-tools.sh"
 
+# ─── Python tools ────────────────────────────────────────────────────────────
+echo "==> Installing Python tools..."
+bash "$DOTFILES_DIR/python-tools.sh"
+
 # ─── Commitlint ───────────────────────────────────────────────────────────────
 echo "==> Installing commitlint..."
 bun install -g @commitlint/cli @commitlint/config-conventional

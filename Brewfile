@@ -17,8 +17,8 @@ brew "jujutsu"        # jj — modern VCS on top of git
 brew "git-delta"      # better diffs, git pager
 brew "lazygit"        # TUI git client
 brew "ghq"            # repo organiser (clones to ~/dev/github.com/org/repo)
-brew "gita"           # run commands across multiple repos
 brew "git-mob"        # co-author tracking for pair/mob programming
+brew "pipx"           # install Python CLI tools in isolated environments
 
 # ─── Kubernetes ───────────────────────────────────────────────────────────────
 brew "kubectl"

@@ -3,9 +3,15 @@ set -euo pipefail
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+# ─── Sudo — ask once, keep alive for the whole script ─────────────────────────
+echo "==> Requesting sudo (needed for Homebrew install and macOS defaults)..."
+sudo -v
+# Refresh the sudo token every 60s in the background until this script exits
+while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+SUDO_KEEPALIVE_PID=$!
+trap 'kill "$SUDO_KEEPALIVE_PID" 2>/dev/null' EXIT
+
 # ─── Xcode Command Line Tools ─────────────────────────────────────────────────
-# Must be installed before anything else. If not present, print instructions
-# and exit — the GUI installer dialog can't be automated in a script.
 if ! xcode-select -p &>/dev/null; then
   echo "==> Xcode Command Line Tools not found."
   echo "    Run: xcode-select --install"
@@ -34,6 +40,9 @@ chezmoi init --source "$DOTFILES_DIR" --apply
 # ─── Runtimes ─────────────────────────────────────────────────────────────────
 echo "==> Installing runtimes via mise..."
 mise install
+
+# Make mise-managed tools available for the rest of this script
+export PATH="$HOME/.local/share/mise/shims:$PATH"
 
 # ─── Go tools ─────────────────────────────────────────────────────────────────
 echo "==> Installing Go tools..."
@@ -75,7 +84,6 @@ if [[ ! -f "$HOME/.config/nvim/init.lua" ]]; then
   git clone https://github.com/LazyVim/starter "$HOME/.config/nvim"
   rm -rf "$HOME/.config/nvim/.git"
 fi
-
 
 # ─── macOS defaults ───────────────────────────────────────────────────────────
 echo "==> Applying macOS defaults..."

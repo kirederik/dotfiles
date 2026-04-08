@@ -49,7 +49,7 @@ New machine setup should require only 3 commands:
 ### Terminal
 - **Ghostty** — primary terminal
 - Font: Monaco Nerd Font, size 13
-- Theme: `theme = catppuccin-mocha` (Ghostty built-in — do NOT download external theme files, they cause "unknown field" parse errors)
+- Theme: `theme = Catppuccin Mocha` (Ghostty built-in, exact name with spaces and title case — do NOT use `catppuccin-mocha`, do NOT download external theme files)
 - `window-decoration = true`, `macos-titlebar-style = hidden` — macOS border with traffic lights, no title text
 
 ### Editor

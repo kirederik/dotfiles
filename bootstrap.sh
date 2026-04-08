@@ -95,21 +95,11 @@ fi
 echo "==> Applying macOS defaults..."
 bash "$DOTFILES_DIR/macos.sh"
 
-# ─── Karabiner-Elements ───────────────────────────────────────────────────────
-# Open the app so it can prompt for system extension approval immediately.
-# Without this it silently does nothing until manually opened.
-echo "==> Opening Karabiner-Elements (approve the system extension when prompted)..."
-open -a "Karabiner-Elements" 2>/dev/null || true
-
 # ─── Rectangle ────────────────────────────────────────────────────────────────
-echo "==> Starting Rectangle..."
 defaults write com.knollsoft.Rectangle launchOnLogin -bool true
-open -a "Rectangle" 2>/dev/null || true
 
 # ─── Maccy ────────────────────────────────────────────────────────────────────
-echo "==> Starting Maccy..."
 defaults write org.p0deje.Maccy launchOnLogin -bool true
-open -a "Maccy" 2>/dev/null || true
 
 # ─── Atuin daemon ─────────────────────────────────────────────────────────────
 echo "==> Starting Atuin daemon..."
@@ -120,7 +110,7 @@ echo ""
 echo "==> Done! Open a new terminal to get started."
 echo ""
 echo "    Manual steps required:"
-echo "    1. Karabiner: approve the system extension in System Settings → Privacy & Security"
+echo "    1. Open Karabiner-Elements and approve the system extension in System Settings → Privacy & Security"
 echo "    2. Bitwarden: Settings → SSH Agent → enable"
 echo "    3. GPG key: gpg --import <exported-key.asc>"
 echo "    4. Accessibility: grant Rectangle, Zoom, etc. when prompted on first open"

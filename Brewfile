@@ -72,6 +72,7 @@ brew "goku"                # write Karabiner config in readable EDN, compiles to
 cask "ghostty"        # primary terminal (fast, native, config-file driven)
 cask "cursor"         # AI IDE — daily driver
 cask "claude"         # Claude desktop app
+cask "claude-code"    # Claude CLI
 cask "chatgpt"        # ChatGPT desktop app
 cask "zen"            # Arc replacement (Firefox-based, open source)
 cask "arc"            # kept during transition to Zen

@@ -1,4 +1,6 @@
 #!/usr/bin/env sh
 # Global commitlint hook — enforces Conventional Commits across all repos.
 # Installed via: git config --global core.hooksPath ~/.config/git/hooks
+export PATH="$HOME/.bun/bin:$HOME/.local/share/mise/shims:$PATH"
+export NODE_PATH="$HOME/.bun/install/global/node_modules"
 commitlint --edit "$1"

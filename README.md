@@ -70,6 +70,7 @@ A few things that can't be automated:
 | `dot_config/git/hooks/executable_commit-msg` | `~/.config/git/hooks/commit-msg` (mode 755) |
 | `dot_tmux.conf` | `~/.tmux.conf` |
 | `dot_config/karabiner/karabiner.json` | `~/.config/karabiner/karabiner.json` |
+| `dot_Library/LaunchAgents/sh.atuin.atuin.plist` | `~/Library/LaunchAgents/sh.atuin.atuin.plist` |
 | `dot_config/karabiner.edn` | `~/.config/karabiner.edn` (Goku source for future complex rules) |
 | `dot_local/bin/executable_*` | `~/.local/bin/*` (personal scripts, mode 755) |
 

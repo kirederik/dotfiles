@@ -1,3 +1,7 @@
+# Skip macOS quarantine for all casks — prevents "are you sure?" Gatekeeper
+# prompts the first time each app is opened.
+cask_args no_quarantine: true
+
 # ─── Dotfile / environment management ────────────────────────────────────────
 brew "chezmoi"        # dotfiles manager
 brew "mise"           # runtime version manager (replaces nvm/pyenv/rbenv)
@@ -76,6 +80,7 @@ cask "chatgpt"        # ChatGPT desktop app
 cask "zen-browser"    # Arc replacement (Firefox-based, open source)
 cask "arc"            # kept during transition to Zen
 cask "rectangle"      # window management
+cask "maccy"          # clipboard manager (replaces Flycut — actively maintained)
 cask "slack"
 cask "discord"
 cask "zoom"

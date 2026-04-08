@@ -68,6 +68,16 @@ mkdir -p "$HOME/dev"
 mkdir -p "$HOME/.ssh/sockets"
 chmod 700 "$HOME/.ssh/sockets"
 
+# ─── Ghostty: Catppuccin theme ────────────────────────────────────────────────
+# Download explicitly — built-in theme name is version-sensitive.
+echo "==> Installing Ghostty Catppuccin theme..."
+GHOSTTY_THEMES="$HOME/.config/ghostty/themes"
+mkdir -p "$GHOSTTY_THEMES"
+if [[ ! -f "$GHOSTTY_THEMES/catppuccin-mocha" ]]; then
+  curl -sLo "$GHOSTTY_THEMES/catppuccin-mocha" \
+    https://raw.githubusercontent.com/catppuccin/ghostty/main/themes/catppuccin-mocha
+fi
+
 # ─── bat: Catppuccin theme ────────────────────────────────────────────────────
 echo "==> Installing bat Catppuccin theme..."
 BAT_THEMES="$(bat --config-dir)/themes"
@@ -89,8 +99,32 @@ fi
 echo "==> Applying macOS defaults..."
 bash "$DOTFILES_DIR/macos.sh"
 
+# ─── Karabiner-Elements ───────────────────────────────────────────────────────
+# Open the app so it can prompt for system extension approval immediately.
+# Without this it silently does nothing until manually opened.
+echo "==> Opening Karabiner-Elements (approve the system extension when prompted)..."
+open -a "Karabiner-Elements" 2>/dev/null || true
+
+# ─── Rectangle ────────────────────────────────────────────────────────────────
+echo "==> Starting Rectangle..."
+defaults write com.knollsoft.Rectangle launchOnLogin -bool true
+open -a "Rectangle" 2>/dev/null || true
+
+# ─── Maccy ────────────────────────────────────────────────────────────────────
+echo "==> Starting Maccy..."
+defaults write org.p0deje.Maccy launchOnLogin -bool true
+open -a "Maccy" 2>/dev/null || true
+
+# ─── Atuin daemon ─────────────────────────────────────────────────────────────
+echo "==> Starting Atuin daemon..."
+launchctl bootstrap gui/"$(id -u)" \
+  "$HOME/Library/LaunchAgents/sh.atuin.atuin.plist" 2>/dev/null || true
+
 echo ""
 echo "==> Done! Open a new terminal to get started."
-echo "    Neovim will finish installing plugins on first launch (nvim)."
-echo "    Remember to: enable Bitwarden SSH agent in Bitwarden → Settings → SSH Agent"
-echo "    Remember to: import your GPG key (gpg --import <key>)"
+echo ""
+echo "    Manual steps required:"
+echo "    1. Karabiner: approve the system extension in System Settings → Privacy & Security"
+echo "    2. Bitwarden: Settings → SSH Agent → enable"
+echo "    3. GPG key: gpg --import <exported-key.asc>"
+echo "    4. Accessibility: grant Rectangle, Zoom, etc. when prompted on first open"

@@ -3,13 +3,14 @@ set -euo pipefail
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# ─── Sudo — ask once, keep alive for the whole script ─────────────────────────
-echo "==> Requesting sudo (needed for Homebrew install and macOS defaults)..."
-sudo -v
-# Refresh the sudo token every 60s in the background until this script exits
-while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
-SUDO_KEEPALIVE_PID=$!
-trap 'kill "$SUDO_KEEPALIVE_PID" 2>/dev/null' EXIT
+# ─── Sudo — only needed if Homebrew isn't installed yet ───────────────────────
+if ! command -v brew &>/dev/null; then
+  echo "==> Requesting sudo (needed for Homebrew install)..."
+  sudo -v
+  while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+  SUDO_KEEPALIVE_PID=$!
+  trap 'kill "$SUDO_KEEPALIVE_PID" 2>/dev/null' EXIT
+fi
 
 # ─── Xcode Command Line Tools ─────────────────────────────────────────────────
 if ! xcode-select -p &>/dev/null; then
@@ -36,7 +37,11 @@ brew bundle --file="$DOTFILES_DIR/Brewfile"
 
 # ─── Dotfiles ─────────────────────────────────────────────────────────────────
 echo "==> Applying dotfiles with chezmoi..."
-chezmoi init --source "$DOTFILES_DIR" --apply
+# Write config first so chezmoi knows where the source is for future runs
+mkdir -p "$HOME/.config/chezmoi"
+echo "sourceDir = \"$DOTFILES_DIR\"" > "$HOME/.config/chezmoi/chezmoi.toml"
+# --force overwrites existing files without prompting
+chezmoi apply --force
 
 # ─── Runtimes ─────────────────────────────────────────────────────────────────
 echo "==> Installing runtimes via mise..."

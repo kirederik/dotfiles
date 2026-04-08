@@ -74,8 +74,8 @@ cask "cursor"         # AI IDE — daily driver
 cask "claude"         # Claude desktop app
 cask "chatgpt"        # ChatGPT desktop app
 cask "zen"            # Arc replacement (Firefox-based, open source)
-cask "dia"            # Arc-alternative from The Browser Company
 cask "arc"            # kept during transition to Zen
+cask "thebrowsercompany-dia"
 cask "rectangle"      # window management
 cask "maccy"          # clipboard manager (replaces Flycut — actively maintained)
 cask "slack"

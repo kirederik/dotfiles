@@ -13,9 +13,6 @@ eval "$(mise activate zsh)"
 # ─── Prompt ───────────────────────────────────────────────────────────────────
 eval "$(starship init zsh)"
 
-# ─── Shell history (replaces ctrl+r) ──────────────────────────────────────────
-eval "$(atuin init zsh --disable-up-arrow)"
-
 # ─── Smart cd ─────────────────────────────────────────────────────────────────
 eval "$(zoxide init zsh --cmd cd)"
 
@@ -26,6 +23,8 @@ eval "$(direnv hook zsh)"
 autoload -Uz compinit && compinit
 
 # ─── zsh options ──────────────────────────────────────────────────────────────
+# Remove / from WORDCHARS so ctrl+w stops at path separators (e.g. deletes only "d" from "a/b/c/d")
+WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
 setopt AUTO_CD          # type a dir name to cd into it
 setopt CORRECT          # suggest correction for mistyped commands
 setopt NO_BEEP          # silence all bells
@@ -55,6 +54,10 @@ export FZF_DEFAULT_OPTS="
 # ctrl+t: paste file path; alt+c: cd into dir
 source "$(brew --prefix)/opt/fzf/shell/completion.zsh" 2>/dev/null
 source "$(brew --prefix)/opt/fzf/shell/key-bindings.zsh" 2>/dev/null
+
+# ─── Shell history (replaces ctrl+r) ──────────────────────────────────────────
+# Must come after fzf key-bindings so atuin wins ctrl+r
+eval "$(atuin init zsh --disable-up-arrow)"
 
 # ─── Modern CLI aliases ───────────────────────────────────────────────────────
 alias gcat="cat"
@@ -98,7 +101,7 @@ bindkey '^g' _ghq_fzf
 
 # ─── Bitwarden SSH agent ──────────────────────────────────────────────────────
 # Only override SSH_AUTH_SOCK if the Bitwarden socket exists (i.e. app is running).
-_bw_sock="$HOME/Library/Group Containers/LNH8B75VMSP.group.com.bitwarden.desktop/T/bitwarden-ssh-agent.sock"
+_bw_sock="$HOME/.bitwarden-ssh-agent.sock"
 if [[ -S "$_bw_sock" ]]; then
   export SSH_AUTH_SOCK="$_bw_sock"
 fi

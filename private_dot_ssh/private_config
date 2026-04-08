@@ -1,8 +1,13 @@
 # ─── SSH agent ────────────────────────────────────────────────────────────────
 # Use Bitwarden's SSH agent for all hosts.
 # Bitwarden must be running with Settings → SSH Agent enabled.
+Host github.com
+    IdentityAgent "~/.bitwarden-ssh-agent.sock"
+    IdentityFile ~/.ssh/github.pub
+    IdentitiesOnly yes
+
 Host *
-    IdentityAgent ~/Library/Group Containers/LNH8B75VMSP.group.com.bitwarden.desktop/T/bitwarden-ssh-agent.sock
+    IdentityAgent "~/.bitwarden-ssh-agent.sock"
 
     # Reuse connections — drastically speeds up repeated git push/pull to same host
     ControlMaster auto

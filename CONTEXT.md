@@ -69,7 +69,7 @@ New machine setup should require only 3 commands:
   - Logitech (1133:49948): caps→ctrl, swap cmd/opt
   - Razer macro pad (5426:103): keys mapped to mission control, sticky ctrl, mouse buttons
   - Generic/Unknown: caps→ctrl, swap cmd/opt
-- System-wide ctrl+w → deleteWordBackward: via `dot_Library/KeyBindings/DefaultKeyBinding.dict`
+- System-wide ctrl+w → deleteWordBackward: via `Library/KeyBindings/DefaultKeyBinding.dict`
 
 ### Kubernetes
 - kubectl, kubectx, krew, k9s, stern, kubeseal

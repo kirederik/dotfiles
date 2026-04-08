@@ -69,16 +69,6 @@ mkdir -p "$HOME/dev"
 mkdir -p "$HOME/.ssh/sockets"
 chmod 700 "$HOME/.ssh/sockets"
 
-# ─── Ghostty: Catppuccin theme ────────────────────────────────────────────────
-# Download explicitly — built-in theme name is version-sensitive.
-echo "==> Installing Ghostty Catppuccin theme..."
-GHOSTTY_THEMES="$HOME/.config/ghostty/themes"
-mkdir -p "$GHOSTTY_THEMES"
-if [[ ! -f "$GHOSTTY_THEMES/catppuccin-mocha" ]]; then
-  curl -sLo "$GHOSTTY_THEMES/catppuccin-mocha" \
-    https://raw.githubusercontent.com/catppuccin/ghostty/main/themes/catppuccin-mocha
-fi
-
 # ─── bat: Catppuccin theme ────────────────────────────────────────────────────
 echo "==> Installing bat Catppuccin theme..."
 BAT_THEMES="$(bat --config-dir)/themes"

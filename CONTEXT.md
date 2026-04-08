@@ -4,109 +4,135 @@ This file summarises all decisions made when designing this dotfiles setup.
 Use it to resume work: `claude "Read CONTEXT.md and continue building the dotfiles"`
 
 ## Goal
-Create a fully portable Mac setup for @kirederik (Derik Evangelista).
+Create a fully portable Mac setup for @kirederik (Derik Evangelista, Syntasso).
 New machine setup should require only 3 commands:
 1. `xcode-select --install`
-2. `git clone git@github.com:kirederik/dotfiles.git ~/.dotfiles`
-3. `cd ~/.dotfiles && ./bootstrap.sh`
+2. `git clone git@github.com:kirederik/dotfiles.git ~/derik/dotfiles`
+3. `cd ~/derik/dotfiles && ./bootstrap.sh`
 
-## Directory: /Users/syn/derik/dotfiles
-This is the working directory. All files go here.
+## Working directory
+`~/derik/dotfiles` — this is where the repo lives and where chezmoi is sourced from.
 
 ## Tool choices and rationale
 
 ### Package management
 - **Homebrew** — primary package manager, everything via Brewfile
-- **chezmoi** — dotfiles manager (NOT symlinks). Files prefixed with `dot_`
-  become dotfiles in `~`. e.g. `dot_zshrc` → `~/.zshrc`
+- **chezmoi** — dotfiles manager (NOT symlinks). Files prefixed with `dot_` become dotfiles in `~`
 - **mise** — runtime version manager, replaces nvm/pyenv/rbenv
+- `HOMEBREW_CASK_OPTS="--no-quarantine"` set in bootstrap.sh before `brew bundle` (not in Brewfile — `cask_args` syntax is invalid and errors)
 
 ### Shell
-- **zsh** (Homebrew, not system) — POSIX compliant, team has many bash scripts
-- **No oh-my-zsh** — too slow (500-1000ms startup). Use antidote instead
+- **zsh** (Homebrew, not system)
 - **antidote** — lightweight plugin manager, reads `~/.zsh_plugins.txt`
-- Three plugins only: zsh-autosuggestions, zsh-syntax-highlighting, zsh-completions
-- **starship** — prompt (works across zsh/bash/fish)
-- **atuin** — shell history replacement (ctrl+r)
-- **zoxide** — smart cd replacement
+- Plugins: zsh-autosuggestions, zsh-syntax-highlighting, zsh-completions
+- **starship** — prompt
+- **atuin** — shell history (ctrl+r)
+- **zoxide** — smart cd
+- **direnv** — per-directory env variables via `.envrc`
 
 ### Runtime: bun over node
-- **bun** is the primary runtime (listed first in .tool-versions)
+- **bun** is primary runtime (listed first in `.tool-versions`)
 - **node lts** kept as fallback for team script compatibility
-- Only alias: `npx='bunx'` — do NOT alias `node` to `bun` (fragile)
-- Use `bun` explicitly in daily work
+- Only alias: `npx='bunx'` — do NOT alias `node` to `bun`
 
 ### Version control
-- **jj** (Jujutsu) — modern VCS on top of git. Git-compatible, teammates unaffected
-- **git-delta** — better diffs, set as git pager
+- **jj** (Jujutsu) — modern VCS on top of git; git-compatible
+- **git-delta** — diffs/pager
 - **lazygit** — TUI git client
 - **ghq** — repo organiser, clones to `~/dev/github.com/org/repo`
-- **gita** — run commands across multiple repos
+- **git-mob** — co-author tracking for pair/mob programming
+- commitlint global hook via `core.hooksPath = ~/.config/git/hooks`
+  - hook: `dot_config/git/hooks/executable_commit-msg`
+  - config: `dot_commitlintrc.json`
+  - installed via: `bun install -g @commitlint/cli @commitlint/config-conventional`
 
 ### Terminal
-- **Ghostty** — primary terminal (fast, native, config-file driven)
-- Font: Monaco Nerd Font
-- Theme: catppuccin-mocha
+- **Ghostty** — primary terminal
+- Font: Monaco Nerd Font, size 13
+- Theme: `theme = catppuccin-mocha` (Ghostty built-in — do NOT download external theme files, they cause "unknown field" parse errors)
+- `window-decoration = true`, `macos-titlebar-style = hidden` — macOS border with traffic lights, no title text
 
 ### Editor
-- **Neovim** with **LazyVim** distribution
-- **Cursor** — AI IDE (daily driver for most coding)
+- **Neovim** with LazyVim — bootstrapped fresh on first `nvim` launch, NOT managed by chezmoi
+- **Cursor** — AI IDE (daily driver)
 
 ### Multiplexer
-- **Zellij** — primary (modern, floating panes, layout files)
-- tmux kept in Brewfile for SSH/remote use
+- **Zellij** — primary; uses built-in Tmux mode (Ctrl+Space prefix, one-shot)
+- **zellij-autolock** plugin (v0.3.2) — auto-locks when nvim/fzf/lazygit/k9s/btop/atuin focused
+- **tmux** — kept in Brewfile for SSH/remote use only; catppuccin theme
 
-### Modern CLI replacements
-bat→cat, eza→ls, fd→find, rg→grep, dust→du, btop→top, sd→sed, xh→curl
+### Keybindings
+- **Karabiner-Elements** — key remapper; config managed as direct JSON (`dot_config/karabiner/karabiner.json`)
+- **Goku** — in Brewfile for future complex rules; currently using direct JSON only
+- Key device configs:
+  - Apple internal (1452:591): fn→right_option, caps→ctrl
+  - Logitech (1133:49948): caps→ctrl, swap cmd/opt
+  - Razer macro pad (5426:103): keys mapped to mission control, sticky ctrl, mouse buttons
+  - Generic/Unknown: caps→ctrl, swap cmd/opt
+- System-wide ctrl+w → deleteWordBackward: via `dot_Library/KeyBindings/DefaultKeyBinding.dict`
 
-### Repo management
-- ghq root: `~/dev`
-- ctrl+g in shell → fuzzy repo jumper (ghq list | fzf)
+### Kubernetes
+- kubectl, kubectx, krew, k9s, stern, kubeseal
+- krew plugins (installed via `kube-tools.sh`): neat, tree, images, resource-capacity, df-pv, who-can, access-matrix, view-secret, get-all
 
 ### Git identities (auto-switched by directory)
-- Personal: kirederik / kirederik@gmail.com → repos under `~/dev/github.com/kirederik/`
-- Work: Derik Evangelista / derik@syntasso.io → repos under `~/dev/github.com/syntasso/`
+- Personal: kirederik / kirederik@gmail.com → `~/dev/github.com/kirederik/`
+- Work: Derik Evangelista / derik@syntasso.io → `~/dev/github.com/syntasso/`
 
-### Home dir sync
-- **chezmoi** — for dotfiles/config (git-backed)
-- **Syncthing** — for Documents, notes, non-code files (continuous P2P sync)
+### SSH / Secrets
+- **Bitwarden** — password manager + SSH agent
+- `SSH_AUTH_SOCK` set conditionally only if socket exists (degrades gracefully without Bitwarden)
+- `private_dot_ssh/private_config` — IdentityAgent for Bitwarden, ControlMaster with 10min persist
+- `private_dot_gnupg/gpg-agent.conf` — 8h cache, pinentry-mac
+
+### Sync
+- **chezmoi** — dotfiles/config (git-backed)
+- **Syncthing** — Documents, notes, non-code files (P2P continuous sync)
 
 ### Browsers
-- **Zen Browser** — Arc replacement (Firefox-based, open source)
-- Arc kept during transition
+- **Zen** — primary (Arc replacement, Firefox-based, open source)
+- Arc kept during transition; Dia also installed
+
+### Clipboard / Window management
+- **Maccy** — clipboard manager (replaced Flycut — actively maintained)
+- **Rectangle** — window management
 
 ### AI tools
-- **Claude Code** — terminal agent for complex tasks
-- **Cursor** — daily IDE
-- Claude + ChatGPT desktop apps
+- Claude Code, Cursor, Claude desktop, ChatGPT desktop
 
-## Files to create
+## Install scripts (all in .chezmoiignore, all called from bootstrap.sh)
 
-```
-dotfiles/
-├── bootstrap.sh              # entry point (brew bundle + chezmoi init + macos.sh)
-├── Brewfile                  # all packages and casks
-├── macos.sh                  # macOS defaults (Finder, Dock, keyboard, etc.)
-├── CONTEXT.md                # this file
-├── .chezmoiignore            # excludes bootstrap.sh, Brewfile, macos.sh, README.md
-├── dot_zshrc                 → ~/.zshrc
-├── dot_zsh_plugins.txt       → ~/.zsh_plugins.txt
-├── dot_gitconfig             → ~/.gitconfig
-├── dot_gitconfig-personal    → ~/.gitconfig-personal
-├── dot_gitconfig-work        → ~/.gitconfig-work
-├── dot_tool-versions         → ~/.tool-versions
-└── dot_config/
-    ├── starship.toml         → ~/.config/starship.toml
-    └── ghostty/
-        └── config            → ~/.config/ghostty/config
-```
+| Script | Purpose |
+|---|---|
+| `bootstrap.sh` | Entry point: xcode check, brew bundle, chezmoi apply, mise install, tool scripts, macOS defaults |
+| `go-tools.sh` | Go tools not in Homebrew: gofumpt, goimports, golines, staticcheck, govulncheck, gotestsum, ginkgo, richgo, gow, mockgen, wire, cobra-cli, go-enum, gomodifytags, impl, gotests, mage, jsonnet, gojsontoyaml |
+| `kube-tools.sh` | krew plugins (idempotent) |
+| `python-tools.sh` | pipx tools: gita |
+| `macos.sh` | macOS defaults: Finder, Dock, keyboard, screenshots, disable smart quotes |
 
-## Key decisions / things NOT to do
+## bootstrap.sh key details
+- Checks `xcode-select -p` first — exits with instructions if CLT not installed (do NOT call `xcode-select --install` in script, it hangs)
+- `sudo -v` at top + background keepalive loop — asks for sudo only once
+- `export HOMEBREW_CASK_OPTS="--no-quarantine"` before `brew bundle`
+- `export PATH="$HOME/.local/share/mise/shims:$PATH"` after `mise install` — needed so bun is available for commitlint install
+- Opens Karabiner-Elements, Rectangle, Maccy via `open -a`
+- Loads atuin LaunchAgent via `launchctl bootstrap`
+- Downloads bat Catppuccin theme to `$(bat --config-dir)/themes/`
+- Bootstraps LazyVim only if `~/.config/nvim/init.lua` doesn't exist
+
+## chezmoi file prefix reference
+- `dot_` → `.` (e.g. `dot_zshrc` → `~/.zshrc`)
+- `private_` → mode 600/700
+- `executable_` → mode 755
+- No prefix needed for files already under `dot_config/`
+
+## Things NOT to do
 - Do NOT use oh-my-zsh
 - Do NOT symlink dotfiles — chezmoi handles placement
-- Do NOT alias `node` to `bun` — use bun explicitly
-- Do NOT use p10k/powerlevel10k — use starship
-- Do NOT use nvm/pyenv/rbenv — use mise for everything
-- Do NOT use exa (unmaintained) — use eza (maintained fork)
-- Nvim config: LazyVim starter, cloned fresh, NOT symlinked by chezmoi
-  (chezmoi manages shell/git config; nvim installs itself via LazyVim on first run)
+- Do NOT alias `node` to `bun`
+- Do NOT use p10k — use starship
+- Do NOT use nvm/pyenv/rbenv — use mise
+- Do NOT use exa (unmaintained) — use eza
+- Do NOT use `cask_args` in Brewfile — use `HOMEBREW_CASK_OPTS` env var in bootstrap.sh
+- Do NOT download external Ghostty theme files — use built-in `theme = catppuccin-mocha`
+- Do NOT manage nvim config with chezmoi — LazyVim bootstraps itself on first launch

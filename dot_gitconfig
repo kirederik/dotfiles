@@ -1,3 +1,7 @@
+[user]
+	name = Derik Evangelista
+	email = kirederik@gmail.com
+
 [core]
 	editor = nvim
 	pager = delta

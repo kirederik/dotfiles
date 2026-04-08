@@ -31,6 +31,7 @@ fi
 
 # ─── Packages ─────────────────────────────────────────────────────────────────
 echo "==> Installing packages from Brewfile..."
+export HOMEBREW_CASK_OPTS="--no-quarantine"
 brew bundle --file="$DOTFILES_DIR/Brewfile"
 
 # ─── Dotfiles ─────────────────────────────────────────────────────────────────

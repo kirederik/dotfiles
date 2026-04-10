@@ -82,3 +82,6 @@ cask "maccy"          # clipboard manager (replaces Flycut — actively maintain
 cask "slack"
 cask "discord"
 cask "zoom"
+cask "logi-options+"
+cask "whatsapp"
+cask "elgato-stream-deck"

@@ -21,7 +21,7 @@ defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
 # ─── Dock ─────────────────────────────────────────────────────────────────────
 defaults write com.apple.dock autohide -bool true
 defaults write com.apple.dock autohide-delay -float 0
-defaults write com.apple.dock autohide-time-modifier -float 0.3
+defaults write com.apple.dock autohide-time-modifier -float 0.8
 defaults write com.apple.dock tilesize -int 48
 defaults write com.apple.dock show-recents -bool false                # no recent apps
 

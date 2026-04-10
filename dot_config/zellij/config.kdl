@@ -6,6 +6,7 @@
 
 theme "catppuccin-mocha"
 simplified_ui true
+default_layout "default"
 copy_on_select true
 scroll_buffer_size 10000
 pane_frames false
@@ -31,6 +32,17 @@ load_plugins {
 
 keybinds clear-defaults=false {
 
+    // ── Remove noisy default Alt bindings from status bar ─────────────────────
+    // With clear-defaults=false the shared_except "locked" defaults include
+    // "Alt +" / "Alt =" → Resize "Increase" and "Alt -" → Resize "Decrease".
+    // Unbinding them here removes them from all modes so they don't clutter
+    // the status bar.
+    shared_except "locked" {
+        unbind "Alt +" "Alt ="
+        unbind "Alt -"
+    }
+
+
     // ── Normal mode ────────────────────────────────────────────────────────
     normal {
         // Ctrl+Space arms the leader — mirrors tmux prefix
@@ -42,6 +54,18 @@ keybinds clear-defaults=false {
         bind "Ctrl n" { SwitchToMode "Resize"; }
         bind "Ctrl o" { SwitchToMode "Session"; }
         bind "Ctrl q" { Quit; }
+
+        // Pass through emacs line-nav to the shell.
+        // Write the raw bytes instead of relying on pass-through, because Ghostty
+        // uses the kitty keyboard protocol which sends Ctrl+A as \x1b[97;5u —
+        // Zellij would forward that sequence and zsh readline wouldn't recognise it.
+        // Write 1 → \x01 (SOH = beginning-of-line), Write 5 → \x05 (ENQ = end-of-line),
+        // Write 11 → \x0b (VT = kill to end-of-line).
+        // WriteChars "\u{1b}." → ESC+. = yank-last-arg (insert last argument).
+        bind "Ctrl a" { Write 1; }
+        bind "Ctrl e" { Write 5; }
+        bind "Ctrl k" { Write 11; }
+        bind "Alt ." { WriteChars "\u{1b}."; }
     }
 
     // ── Locked mode ────────────────────────────────────────────────────────
@@ -55,8 +79,9 @@ keybinds clear-defaults=false {
     // Armed by Ctrl+Space. Each binding executes and returns to Normal,
     // matching the tmux one-shot prefix model.
     tmux {
-        // Cancel / re-press prefix to abort
-        bind "Esc" "Ctrl Space" { SwitchToMode "Normal"; }
+        // Cancel — Esc aborts, Ctrl+Space toggles to last active tab (like tmux last-window)
+        bind "Esc" { SwitchToMode "Normal"; }
+        bind "Ctrl Space" { ToggleTab; SwitchToMode "Normal"; }
 
         // Pane navigation  (was C-M-h/j/k/l unprefixed)
         bind "h" { MoveFocus "Left";  SwitchToMode "Normal"; }
@@ -86,6 +111,17 @@ keybinds clear-defaults=false {
         // Note: selection in scroll mode uses mouse or Shift+arrow — there's
         // no 'v' visual-select like in tmux. 'y' copies and exits.
         bind "[" { SwitchToMode "Scroll"; }
+
+        // Jump to tab by number (like tmux C-b 1..9)
+        bind "1" { GoToTab 1; SwitchToMode "Normal"; }
+        bind "2" { GoToTab 2; SwitchToMode "Normal"; }
+        bind "3" { GoToTab 3; SwitchToMode "Normal"; }
+        bind "4" { GoToTab 4; SwitchToMode "Normal"; }
+        bind "5" { GoToTab 5; SwitchToMode "Normal"; }
+        bind "6" { GoToTab 6; SwitchToMode "Normal"; }
+        bind "7" { GoToTab 7; SwitchToMode "Normal"; }
+        bind "8" { GoToTab 8; SwitchToMode "Normal"; }
+        bind "9" { GoToTab 9; SwitchToMode "Normal"; }
 
         // Session manager  (replaces tmux session management)
         bind "s" "g" { SwitchToMode "Session"; }

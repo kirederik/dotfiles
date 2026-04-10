@@ -27,6 +27,8 @@ brew "krew"           # kubectl plugin manager
 brew "k9s"            # TUI cluster browser
 brew "stern"          # multi-pod log tailing
 brew "kubeseal"       # sealed secrets CLI
+brew "kind"           # Kubernetes-in-Docker
+brew "minio/minio/mc" # MinIO client (S3-compatible object storage CLI)
 
 # ─── Go toolchain (via Homebrew, not mise — system-wide linters/release tools) ─
 brew "golangci-lint"  # meta-linter
@@ -38,6 +40,9 @@ brew "golang-migrate" # database migrations CLI
 
 # ─── GitHub CLI ───────────────────────────────────────────────────────────────
 brew "gh"
+
+# ─── Cloudflare ───────────────────────────────────────────────────────────────
+brew "cloudflare-wrangler"
 
 # ─── Terminal multiplexers ────────────────────────────────────────────────────
 brew "zellij"         # primary multiplexer (floating panes, layout files)
@@ -55,6 +60,10 @@ brew "dust"           # du replacement
 brew "btop"           # top replacement
 brew "sd"             # sed replacement (simpler syntax)
 brew "xh"             # curl replacement (friendlier HTTP client)
+
+# ─── Work utils ───────────────────────────────────────────────────────────────
+brew "yq"
+brew "watch"
 
 # ─── Utilities ────────────────────────────────────────────────────────────────
 brew "gnupg"          # GPG for commit signing
@@ -85,3 +94,7 @@ cask "zoom"
 cask "logi-options+"
 cask "whatsapp"
 cask "elgato-stream-deck"
+cask "dropbox"
+cask "hiddenbar"
+cask "docker-desktop"
+cask "deluge"

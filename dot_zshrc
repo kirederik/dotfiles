@@ -14,13 +14,14 @@ eval "$(mise activate zsh)"
 eval "$(starship init zsh)"
 
 # ─── Smart cd ─────────────────────────────────────────────────────────────────
-eval "$(zoxide init zsh --cmd cd)"
+eval "$(zoxide init zsh)"
 
 # ─── direnv ───────────────────────────────────────────────────────────────────
 eval "$(direnv hook zsh)"
 
 # ─── Completions ──────────────────────────────────────────────────────────────
 autoload -Uz compinit && compinit
+
 
 # ─── zsh options ──────────────────────────────────────────────────────────────
 # Remove / from WORDCHARS so ctrl+w stops at path separators (e.g. deletes only "d" from "a/b/c/d")
@@ -59,9 +60,18 @@ source "$(brew --prefix)/opt/fzf/shell/key-bindings.zsh" 2>/dev/null
 # Must come after fzf key-bindings so atuin wins ctrl+r
 eval "$(atuin init zsh --disable-up-arrow)"
 
+# Up/Down arrows do prefix-aware history search:
+# type "make " then ↑ cycles through all "make …" commands.
+autoload -Uz up-line-or-beginning-search down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+[[ -n $terminfo[kcuu1] ]] && bindkey $terminfo[kcuu1] up-line-or-beginning-search
+[[ -n $terminfo[kcud1] ]] && bindkey $terminfo[kcud1] down-line-or-beginning-search
+
 # ─── Modern CLI aliases ───────────────────────────────────────────────────────
 alias gcat="cat"
 alias cat='bat'
+alias gls="ls"
 alias ls='eza'
 alias ll='eza -la --git'
 alias la='eza -la --git'
@@ -71,6 +81,9 @@ alias grep='rg'
 alias du='dust'
 alias top='btop'
 alias curl='xh'
+alias gsed="gnused"
+alias vi="vim"
+alias vim="nvim"
 
 # Node/bun — only this alias; do NOT alias node→bun (fragile)
 alias npx='bunx'
@@ -110,6 +123,12 @@ function _ghq_fzf() {
 zle -N _ghq_fzf
 bindkey '^g' _ghq_fzf
 
+# ─── MinIO (mc) ───────────────────────────────────────────────────────────────
+# Register local kind cluster's MinIO as "kind" alias only if the port is open.
+if command -v mc &>/dev/null && nc -z localhost 31337 2>/dev/null; then
+  mc alias set kind http://localhost:31337 minioadmin minioadmin >/dev/null 2>&1
+fi
+
 # ─── Bitwarden SSH agent ──────────────────────────────────────────────────────
 # Only override SSH_AUTH_SOCK if the Bitwarden socket exists (i.e. app is running).
 _bw_sock="$HOME/.bitwarden-ssh-agent.sock"
@@ -126,4 +145,13 @@ export GOPATH="$HOME/go"
 export PATH="$GOPATH/bin:$PATH"
 
 # ─── PATH extras ──────────────────────────────────────────────────────────────
-export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.local/bin:$HOME/dev/github.com/syntasso/home-scripts/:$PATH"
+
+# ─── Zellij: restore classic line-nav (must run last, after all plugins) ──────
+# Zellij's config intercepts Ctrl+A/E and writes bytes \x01/\x05 to the PTY
+# (via `Write 1` / `Write 5`), bypassing Ghostty's kitty keyboard protocol.
+# We bind ^A/^E explicitly here — after atuin/fzf/plugins — so nothing overrides them.
+if [[ -n $ZELLIJ ]]; then
+  bindkey '^A' beginning-of-line
+  bindkey '^E' end-of-line
+fi

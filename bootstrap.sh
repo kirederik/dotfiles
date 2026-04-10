@@ -58,9 +58,8 @@ bash "$DOTFILES_DIR/go-tools.sh"
 echo "==> Installing Python tools..."
 bash "$DOTFILES_DIR/python-tools.sh"
 
-# ─── Commitlint ───────────────────────────────────────────────────────────────
-echo "==> Installing commitlint..."
-bun install -g @commitlint/cli @commitlint/config-conventional
+# ─── Bun tools ────────────────────────────────────────────────────────────────
+bash "$DOTFILES_DIR/bun-tools.sh"
 
 # ─── kubectl plugins ──────────────────────────────────────────────────────────
 echo "==> Installing kubectl plugins..."

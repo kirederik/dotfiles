@@ -139,6 +139,21 @@
                 },
                 {
                     "identifiers": {
+                        "vendor_id": 6645,
+                        "product_id": 4140,
+                        "is_keyboard": true
+                    },
+                    "ignore": false,
+                    "description": "NuPhy Halo75 — right_command → right_option (for UK # via Right-Opt+Shift+3)",
+                    "simple_modifications": [
+                        {
+                            "from": { "key_code": "right_command" },
+                            "to": [{ "key_code": "right_option" }]
+                        }
+                    ]
+                },
+                {
+                    "identifiers": {
                         "vendor_id": 7247,
                         "product_id": 2,
                         "is_keyboard": true

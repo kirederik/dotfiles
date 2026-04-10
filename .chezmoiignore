@@ -4,8 +4,10 @@ macos.sh
 go-tools.sh
 kube-tools.sh
 python-tools.sh
+bun-tools.sh
 README.md
 CONTEXT.md
+CLAUDE.md
 .git
 .claude
 private_dot_ssh/sockets

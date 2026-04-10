@@ -9,6 +9,11 @@ shell-integration = zsh
 
 macos-option-as-alt = left
 
+# UK keyboard: alt+shift+3 normally produces # via macOS composition, but
+# macos-option-as-alt=left intercepts it as an escape sequence instead.
+# This override sends the literal # character.
+keybind = alt+3=text:#
+
 # Window
 window-padding-x = 8
 window-padding-y = 8

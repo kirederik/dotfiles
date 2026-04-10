@@ -13,23 +13,6 @@ pane_frames false
 
 on_force_close "detach"
 
-// ── zellij-autolock ────────────────────────────────────────────────────────
-// Automatically switches to Locked mode when a full-screen TUI is focused,
-// so every keystroke goes to the app instead of being intercepted by Zellij.
-// Switches back to Normal when the app exits.
-plugins {
-    autolock location="https://github.com/fresh2dev/zellij-autolock/releases/download/0.3.2/zellij-autolock.wasm" {
-        triggers         "nvim|vim|vi|fzf|lazygit|k9s|btop|atuin"
-        watch_interval_ms 300
-        // Set to true to start in locked mode
-        lock_on_start    false
-    }
-}
-
-load_plugins {
-    "autolock"
-}
-
 keybinds clear-defaults=false {
 
     // ── Remove noisy default Alt bindings from status bar ─────────────────────
@@ -40,6 +23,9 @@ keybinds clear-defaults=false {
     shared_except "locked" {
         unbind "Alt +" "Alt ="
         unbind "Alt -"
+        // Free Ctrl+G so it passes through to zsh (ghq repo jumper).
+        // Entering locked mode is handled automatically by zellij-autolock.
+        unbind "Ctrl g"
     }
 
 
@@ -125,6 +111,10 @@ keybinds clear-defaults=false {
 
         // Session manager  (replaces tmux session management)
         bind "s" "g" { SwitchToMode "Session"; }
+
+        // Manual lock — pass all keys to the focused app (e.g. nvim)
+        // Unlock with Ctrl+g (bound in locked mode)
+        bind "l" { SwitchToMode "Locked"; }
     }
 
     // ── Scroll mode (copy mode equivalent) ────────────────────────────────

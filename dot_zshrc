@@ -3,6 +3,9 @@ if [[ -f /opt/homebrew/bin/brew ]]; then
   eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
+# ─── Completions (must run before antidote so plugins can call compdef) ───────
+autoload -Uz compinit && compinit
+
 # ─── Antidote plugin manager ──────────────────────────────────────────────────
 source "$(brew --prefix)/opt/antidote/share/antidote/antidote.zsh"
 antidote load
@@ -11,16 +14,15 @@ antidote load
 eval "$(mise activate zsh)"
 
 # ─── Prompt ───────────────────────────────────────────────────────────────────
-eval "$(starship init zsh)"
+# Only init starship if not already loaded — prevents ZLE widget re-wrapping
+# when .zshrc is sourced multiple times in the same session (starship/issues/3418)
+[[ -z "$STARSHIP_SHELL" ]] && eval "$(starship init zsh)"
 
 # ─── Smart cd ─────────────────────────────────────────────────────────────────
 eval "$(zoxide init zsh)"
 
 # ─── direnv ───────────────────────────────────────────────────────────────────
 eval "$(direnv hook zsh)"
-
-# ─── Completions ──────────────────────────────────────────────────────────────
-autoload -Uz compinit && compinit
 
 
 # ─── zsh options ──────────────────────────────────────────────────────────────
@@ -92,6 +94,9 @@ alias npx='bunx'
 alias g='git'
 alias lg='lazygit'
 
+# Homebrew — sync installed packages to Brewfile (install missing + remove unlisted)
+alias brewup='brew bundle install --file=~/.dotfiles/Brewfile && brew bundle cleanup --force --file=~/.dotfiles/Brewfile'
+
 # Mob programming — keeps git mob and jj in sync
 function mob() {
   if [[ $# -eq 0 ]]; then
@@ -102,6 +107,63 @@ function mob() {
     git mob "$@" && mob-jj "$@"
   fi
 }
+
+# ─── Zellij ───────────────────────────────────────────────────────────────────
+# Strip ANSI color codes from zellij list-sessions output so fzf renders cleanly
+_zj_sessions() { zellij list-sessions 2>/dev/null | sed 's/\x1b\[[0-9;]*m//g' | awk '{print $1}'; }
+
+# Smart attach: fzf if multiple sessions, direct if one, new if none
+function zj() {
+  local sessions session
+  sessions=$(_zj_sessions)
+  if [[ -z "$sessions" ]]; then
+    zellij
+  elif [[ $(echo "$sessions" | wc -l) -eq 1 ]]; then
+    zellij attach "$sessions"
+  else
+    session=$(echo "$sessions" | fzf --prompt='attach> ') \
+      && zellij attach "$session"
+  fi
+}
+
+# Kill session via fzf
+function zjk() {
+  local session
+  session=$(_zj_sessions | fzf --prompt='kill> ') \
+    && zellij kill-session "$session"
+}
+
+# Delete a single session via fzf
+function zjd() {
+  local session
+  session=$(_zj_sessions | fzf --prompt='delete> ') \
+    && zellij delete-session "$session"
+}
+
+alias zjl='zellij list-sessions'
+
+# ─── Zellij: auto-lock for TUI apps ──────────────────────────────────────────
+# Locks Zellij when a TUI app launches, unlocks when it exits.
+# Manual Ctrl+G to unlock mid-session; Ctrl+Space,l to re-lock.
+_zellij_wrap() {
+  local cmd="$1"
+  eval "function $cmd() {
+    if [[ -n \$ZELLIJ ]]; then
+      zellij action switch-mode locked
+      command $cmd \"\$@\"
+      local ret=\$?
+      zellij action switch-mode normal
+      return \$ret
+    else
+      command $cmd \"\$@\"
+    fi
+  }"
+}
+
+for cmd in nvim vim lazygit k9s btop atuin fzf; do
+  _zellij_wrap "$cmd"
+done
+unset -f _zellij_wrap
 
 # Kubernetes
 alias k='kubectl'

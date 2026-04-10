@@ -15,6 +15,7 @@ cd ~/.dotfiles && ./bootstrap.sh
 ```
 
 `bootstrap.sh` will:
+
 1. Install Homebrew
 2. Install all packages and casks from `Brewfile`
 3. Apply dotfiles to `~` via chezmoi
@@ -154,6 +155,7 @@ Three Go tools come from Homebrew instead (updated with `brew upgrade`):
 | `golang-migrate` | Available and stable in Homebrew |
 
 **goreleaser-pro**: install separately — it requires a licence key:
+
 ```sh
 brew install goreleaser/tap/goreleaser-pro
 # Add GORELEASER_KEY to a project-level .envrc (never commit it)
@@ -315,8 +317,8 @@ Identity is switched automatically based on repo path:
 
 | Path | Identity |
 |---|---|
-| `~/dev/github.com/kirederik/**` | kirederik / kirederik@gmail.com |
-| `~/dev/github.com/syntasso/**` | Derik Evangelista / derik@syntasso.io |
+| `~/dev/github.com/kirederik/**` | kirederik / <kirederik@gmail.com> |
+| `~/dev/github.com/syntasso/**` | Derik Evangelista / <derik@syntasso.io> |
 
 Clone repos under the right path to get the right identity automatically:
 
@@ -332,6 +334,7 @@ ghq get github.com/syntasso/kratix         # → ~/dev/github.com/syntasso/krati
 SSH keys are stored in [Bitwarden](https://bitwarden.com). The Bitwarden desktop app acts as an SSH agent — no key files on disk.
 
 **Requirements:**
+
 - Bitwarden desktop app running
 - Settings → SSH Agent → enabled
 
@@ -401,6 +404,7 @@ commitlint runs as a global git hook on every commit across all repos.
 **Hook**: `~/.config/git/hooks/commit-msg` — installed via `core.hooksPath` in `.gitconfig`, so no per-repo setup is needed.
 
 Format:
+
 ```
 <type>(optional scope): <subject>
 
@@ -413,6 +417,7 @@ chore: bump golangci-lint to v1.57
 Valid types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`, `ci`, `build`, `revert`.
 
 **To bypass in an emergency** (use sparingly):
+
 ```sh
 git commit --no-verify -m "wip: temp"
 ```

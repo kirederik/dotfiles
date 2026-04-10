@@ -66,6 +66,7 @@ brew "yq"
 brew "watch"
 
 # ─── Utilities ────────────────────────────────────────────────────────────────
+brew "libyaml"        # required to compile Ruby's psych extension (YAML parser)
 brew "gnupg"          # GPG for commit signing
 brew "pinentry-mac"   # macOS pinentry dialog for GPG passphrase
 brew "syncthing"      # P2P sync for Documents / notes
@@ -78,16 +79,16 @@ cask "karabiner-elements"  # key remapper
 brew "goku"                # write Karabiner config in readable EDN, compiles to JSON
 
 # ─── Casks ────────────────────────────────────────────────────────────────────
-cask "ghostty"        # primary terminal (fast, native, config-file driven)
-cask "cursor"         # AI IDE — daily driver
-cask "claude"         # Claude desktop app
-cask "claude-code"    # Claude CLI
-cask "chatgpt"        # ChatGPT desktop app
-cask "zen"            # Arc replacement (Firefox-based, open source)
-cask "arc"            # kept during transition to Zen
+cask "ghostty"         # primary terminal (fast, native, config-file driven)
+cask "cursor"          # AI IDE — daily driver
+cask "claude"          # Claude desktop app
+cask "claude-code"     # Claude CLI
+cask "chatgpt"         # ChatGPT desktop app
+cask "zen"             # Arc replacement (Firefox-based, open source)
+cask "arc"             # kept during transition to Zen
+cask "raycast"         # launcher + window management + clipboard history (replaces rectangle, maccy, hiddenbar)
+cask "jordanbaird-ice" # hiddenbar alternative
 cask "thebrowsercompany-dia"
-cask "rectangle"      # window management
-cask "maccy"          # clipboard manager (replaces Flycut — actively maintained)
 cask "slack"
 cask "discord"
 cask "zoom"
@@ -95,6 +96,9 @@ cask "logi-options+"
 cask "whatsapp"
 cask "elgato-stream-deck"
 cask "dropbox"
-cask "hiddenbar"
 cask "docker-desktop"
 cask "deluge"
+cask "plex"
+cask "plex-media-server"
+cask "vlc"
+cask "rowboat"

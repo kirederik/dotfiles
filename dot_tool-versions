@@ -1,3 +1,4 @@
 bun 1
 node lts
 go latest
+ruby 3

@@ -43,6 +43,34 @@ return {
     },
   },
 
+  -- ── Pyright: suppress progress notifications ──────────────────────────────
+  -- Pyright emits many "Checking..." workspace progress messages that stack up
+  -- in the corner. This noice route silently drops them.
+  {
+    "folke/noice.nvim",
+    opts = {
+      routes = {
+        {
+          filter = { event = "lsp", kind = "progress", find = "Pyright" },
+          opts = { skip = true },
+        },
+      },
+    },
+  },
+
+  -- ── Markdown: disable inline render by default ────────────────────────────
+  -- render-markdown.nvim renders headings/code/tables inline by default,
+  -- which mixes preview and raw syntax. Disable on open; toggle with <leader>um.
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    opts = {
+      enabled = false,
+    },
+    keys = {
+      { "<leader>um", "<cmd>RenderMarkdown toggle<cr>", ft = "markdown", desc = "Toggle Markdown Render" },
+    },
+  },
+
   -- ── golangci-lint ─────────────────────────────────────────────────────────
   -- golangci-lint runs ~50 Go linters in parallel and surfaces results as
   -- inline diagnostics. It uses the Homebrew binary (already in Brewfile)

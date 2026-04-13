@@ -14,9 +14,15 @@ antidote load
 eval "$(mise activate zsh)"
 
 # ─── Prompt ───────────────────────────────────────────────────────────────────
-# Only init starship if not already loaded — prevents ZLE widget re-wrapping
-# when .zshrc is sourced multiple times in the same session (starship/issues/3418)
-[[ -z "$STARSHIP_SHELL" ]] && eval "$(starship init zsh)"
+# Only init starship if not already loaded in this shell process.
+# Uses a non-exported variable so the guard is local to this shell —
+# child shells (e.g. new zellij panes) start fresh and init correctly,
+# while re-sourcing .zshrc in the same session skips the re-init
+# that causes ZLE widget re-wrapping (starship/issues/3418).
+[[ -z $_starship_initialized ]] && {
+  eval "$(starship init zsh)"
+  _starship_initialized=1
+}
 
 # ─── Smart cd ─────────────────────────────────────────────────────────────────
 eval "$(zoxide init zsh)"
@@ -78,6 +84,7 @@ alias ls='eza'
 alias ll='eza -la --git'
 alias la='eza -la --git'
 alias lt='eza --tree'
+alias tree="eza --tree"
 alias ggrep='grep'
 alias grep='rg'
 alias du='dust'
@@ -114,6 +121,11 @@ _zj_sessions() { zellij list-sessions 2>/dev/null | sed 's/\x1b\[[0-9;]*m//g' | 
 
 # Smart attach: fzf if multiple sessions, direct if one, new if none
 function zj() {
+  # check if there's an argument; if so, start a named session
+  if [[ $# -gt 0 ]]; then
+    zellij --session "$1"
+    return
+  fi
   local sessions session
   sessions=$(_zj_sessions)
   if [[ -z "$sessions" ]]; then
@@ -160,7 +172,7 @@ _zellij_wrap() {
   }"
 }
 
-for cmd in nvim vim lazygit k9s btop atuin fzf; do
+for cmd in nvim vim lazygit k9s btop; do
   _zellij_wrap "$cmd"
 done
 unset -f _zellij_wrap

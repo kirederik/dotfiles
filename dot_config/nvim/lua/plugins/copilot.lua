@@ -24,6 +24,10 @@ return {
       suggestion = {
         enabled = true,
         auto_trigger = true,
+        -- hide ghost text while a completion menu is open, preventing stacked/overlapping
+        -- suggestion text from copilot.lua and blink.cmp appearing simultaneously.
+        hide_during_completion = true,
+        debounce = 75,
         keymap = {
           accept = false, -- handled via keys above; Tab only fires when suggestion is visible
           accept_word = "<C-Right>",

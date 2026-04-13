@@ -2,6 +2,7 @@
 
 format = """
 $directory\
+$custom\
 $git_branch\
 $git_status\
 $nodejs\
@@ -23,9 +24,24 @@ truncation_length   = 4
 truncate_to_repo    = true
 style               = "bold blue"
 
+[custom.jj]
+# Show jj change ID + description when inside a jj repo.
+# In colocated repos git_branch goes quiet (jj leaves git in detached HEAD).
+description = "jj change info"
+command     = """jj log --no-graph --ignore-working-copy -r@ \
+  --template 'separate(" ", "⬡", change_id.shortest(8), \
+    if(local_bookmarks, "(" ++ local_bookmarks.join(", ") ++ ")"), \
+    if(conflict, "✗"), if(empty, "∅"), \
+    if(description.first_line() != "", description.first_line()))' \
+  2>/dev/null"""
+when        = "jj root 2>/dev/null"
+style       = "bold purple"
+format      = "[$output]($style) "
+
 [git_branch]
-symbol = " "
-style  = "bold purple"
+symbol          = " "
+style           = "bold purple"
+ignore_branches = ["HEAD"]  # jj always leaves git detached — suppress the noise
 
 [git_status]
 ahead      = "⇡${count}"

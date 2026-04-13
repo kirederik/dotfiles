@@ -1,14 +1,6 @@
-bootstrap.sh
-Brewfile
-macos.sh
-go-tools.sh
-kube-tools.sh
-python-tools.sh
+# Scripts and repo files that should not be applied to $HOME by chezmoi.
 bun-tools.sh
-README.md
-CONTEXT.md
-CLAUDE.md
-.git
-.claude
-private_dot_ssh/sockets
-dot_local/bin/.gitkeep
+bootstrap.sh
+./CLAUDE.md
+./CONTEXT.md
+./README.md

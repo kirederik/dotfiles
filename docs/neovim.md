@@ -62,6 +62,22 @@ Ghost text is hidden while a completion popup is open (`hide_during_completion =
 
 ---
 
+## Testing (neotest)
+
+Go tests run via `neotest` + `neotest-go`. Results appear inline next to test functions.
+
+| Key | Action |
+|---|---|
+| `<leader>tt` | Run test nearest to cursor |
+| `<leader>tT` | Run all tests in file |
+| `<leader>tr` | Re-run last test |
+| `<leader>ts` | Toggle test summary panel |
+| `<leader>to` | Show test output |
+| `<leader>tO` | Toggle output panel |
+| `<leader>tS` | Stop test run |
+
+---
+
 ## Keybindings (custom)
 
 | Key | Mode | Action |

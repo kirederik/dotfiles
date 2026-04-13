@@ -1,3 +1,4 @@
 {
-    "workbench.colorTheme": "Catppuccin Frappé"
+  "workbench.colorTheme": "Catppuccin Frappé",
+  "workbench.tree.indent": 24
 }

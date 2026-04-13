@@ -77,6 +77,8 @@ mob                 # end session (clears co-authors)
 
 `nvim`, `vim`, `lazygit`, `k9s`, `btop` are wrapped so Zellij automatically enters Locked mode (all keys pass through) when they launch, and returns to Normal mode when they exit.
 
+Only persistent TUI apps belong here — short-lived launchers that spawn fzf as a child (like `fzf-make`) fight with the mode-switching timing and should be excluded.
+
 Manual override: `ctrl+g` to unlock mid-session without exiting the app.
 
 ---

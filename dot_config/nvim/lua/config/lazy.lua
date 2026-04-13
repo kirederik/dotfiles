@@ -34,6 +34,7 @@ require("lazy").setup({
 		{ import = "lazyvim.plugins.extras.lang.json" },
 		{ import = "lazyvim.plugins.extras.lang.markdown" },
 		{ import = "lazyvim.plugins.extras.lang.docker" },
+		{ import = "lazyvim.plugins.extras.test.core" },
 		-- 3. User plugins: everything under lua/plugins/ is loaded here.
 		--    These can extend or override anything defined above.
 		{ import = "plugins" },

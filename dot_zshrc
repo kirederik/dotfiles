@@ -75,6 +75,10 @@ zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
 [[ -n $terminfo[kcuu1] ]] && bindkey $terminfo[kcuu1] up-line-or-beginning-search
 [[ -n $terminfo[kcud1] ]] && bindkey $terminfo[kcud1] down-line-or-beginning-search
+# Fallback: bind raw ANSI sequences directly — terminfo[kcuu1/kcud1] may be
+# empty in Zellij panes, leaving the above no-ops.
+bindkey '^[[A' up-line-or-beginning-search
+bindkey '^[[B' down-line-or-beginning-search
 
 # ─── Modern CLI aliases ───────────────────────────────────────────────────────
 alias gcat="cat"
@@ -172,7 +176,7 @@ _zellij_wrap() {
   }"
 }
 
-for cmd in nvim vim lazygit k9s btop; do
+for cmd in nvim vim lazygit k9s btop fzf-make; do
   _zellij_wrap "$cmd"
 done
 unset -f _zellij_wrap
@@ -229,3 +233,8 @@ if [[ -n $ZELLIJ ]]; then
   bindkey '^A' beginning-of-line
   bindkey '^E' end-of-line
 fi
+
+# ─── Ensure ESC+. / Alt+. inserts last argument (must run last) ───────────────
+# zsh default emacs binding, but plugins can silently clobber it.
+# Zellij forwards Alt+. as \e. via WriteChars in config.kdl.
+bindkey '\e.' insert-last-word

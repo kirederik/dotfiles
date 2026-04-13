@@ -43,6 +43,33 @@ return {
     },
   },
 
+  -- ── neotest-go: Go adapter ────────────────────────────────────────────────
+  -- test.core extra (lazy.lua) owns neotest setup and keymaps.
+  -- This only registers the Go adapter via opts, which LazyVim merges in.
+  {
+    "nvim-neotest/neotest",
+    dependencies = { "nvim-neotest/neotest-go" },
+    opts = function(_, opts)
+      opts.adapters = opts.adapters or {}
+      table.insert(opts.adapters, require("neotest-go")({
+        -- Run the whole package when triggered from a Ginkgo spec file.
+        -- Ginkgo spec files have no func TestXxx, so neotest-go can't find
+        -- individual positions — package-level run picks them all up via
+        -- the suite bootstrap in suite_test.go.
+        recursive_run = true,
+        args = { "-v", "-count=1" },
+      }))
+    end,
+  },
+
+  -- ── Inlay hints: disabled globally (too noisy with := in Go, etc.) ─────────
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      inlay_hints = { enabled = false },
+    },
+  },
+
   -- ── Pyright: suppress progress notifications ──────────────────────────────
   -- Pyright emits many "Checking..." workspace progress messages that stack up
   -- in the corner. This noice route silently drops them.

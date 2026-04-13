@@ -11,6 +11,15 @@ pager = "delta"
 program = "delta"
 
 [aliases]
-# Shortcuts matching jj's own conventions
-tug = ["git", "fetch"]
+tug  = ["git", "fetch"]
 sync = ["git", "push", "--all"]
+push = ["git", "push"]
+l    = ["log", "--limit", "10"]
+ll   = ["log"]
+d    = ["diff"]
+s    = ["status"]
+n    = ["new"]
+c    = ["commit"]
+sq   = ["squash"]
+desc = ["describe"]
+b    = ["bookmark"]

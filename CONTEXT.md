@@ -58,7 +58,7 @@ New machine setup should require only 3 commands:
 
 ### Multiplexer
 - **Zellij** — primary; uses built-in Tmux mode (Ctrl+Space prefix, one-shot)
-- **zellij-autolock** plugin (v0.3.2) — auto-locks when nvim/fzf/lazygit/k9s/btop/atuin focused
+- TUI autolock via **shell wrappers** in `.zshrc` (not a plugin) — wraps nvim/vim/lazygit/k9s/btop with `zellij action switch-mode locked/normal`. atuin/fzf are excluded (atuin hooks fire on every keystroke).
 - **tmux** — kept in Brewfile for SSH/remote use only; catppuccin theme
 
 ### Keybindings
@@ -94,8 +94,7 @@ New machine setup should require only 3 commands:
 - Arc kept during transition; Dia also installed
 
 ### Clipboard / Window management
-- **Maccy** — clipboard manager (replaced Flycut — actively maintained)
-- **Rectangle** — window management
+- **Raycast** — replaces Rectangle (window management) + Maccy (clipboard) + HiddenBar
 
 ### AI tools
 - Claude Code, Cursor, Claude desktop, ChatGPT desktop
@@ -134,5 +133,8 @@ New machine setup should require only 3 commands:
 - Do NOT use nvm/pyenv/rbenv — use mise
 - Do NOT use exa (unmaintained) — use eza
 - Do NOT use `cask_args` in Brewfile — use `HOMEBREW_CASK_OPTS` env var in bootstrap.sh
-- Do NOT download external Ghostty theme files — use built-in `theme = catppuccin-mocha`
+- Do NOT download external Ghostty theme files — use built-in `theme = Catppuccin Mocha` (exact capitalisation)
+- Do NOT manage nvim config with chezmoi for plugins — LazyVim bootstraps itself. Config files (lua/config/, lua/plugins/) ARE managed by chezmoi via dot_config/nvim/
+- `macos-option-as-alt = left` in Ghostty (not `true`) — left Option = Alt, right Option = macOS composition
+- UK keyboard: `keybind = alt+3=text:#` in Ghostty config compensates for alt+3 not producing #
 - Do NOT manage nvim config with chezmoi — LazyVim bootstraps itself on first launch

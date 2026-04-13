@@ -1,104 +1,107 @@
 # ─── Dotfile / environment management ────────────────────────────────────────
-brew "chezmoi"        # dotfiles manager
-brew "mise"           # runtime version manager (replaces nvm/pyenv/rbenv)
+brew 'chezmoi'        # dotfiles manager
+brew 'mise'           # runtime version manager (replaces nvm/pyenv/rbenv)
 
 # ─── Shell ────────────────────────────────────────────────────────────────────
-brew "zsh"            # Homebrew zsh (not system)
-brew "antidote"       # lightweight zsh plugin manager
-brew "starship"       # cross-shell prompt
-brew "atuin"          # shell history replacement (ctrl+r)
-brew "zoxide"         # smart cd replacement
-brew "fzf"            # fuzzy finder (used by ctrl+g repo jumper)
-brew "direnv"         # per-directory environment variables (.envrc)
+brew 'zsh'            # Homebrew zsh (not system)
+brew 'antidote'       # lightweight zsh plugin manager
+brew 'starship'       # cross-shell prompt
+brew 'atuin'          # shell history replacement (ctrl+r)
+brew 'zoxide'         # smart cd replacement
+brew 'fzf'            # fuzzy finder (used by ctrl+g repo jumper)
+brew 'fzf-make'       # fuzzy picker for Makefile targets
+brew 'direnv'         # per-directory environment variables (.envrc)
 
 # ─── Version control ──────────────────────────────────────────────────────────
-brew "git"
-brew "jujutsu"        # jj — modern VCS on top of git
-brew "git-delta"      # better diffs, git pager
-brew "lazygit"        # TUI git client
-brew "ghq"            # repo organiser (clones to ~/dev/github.com/org/repo)
-brew "git-mob"        # co-author tracking for pair/mob programming
-brew "pipx"           # install Python CLI tools in isolated environments
+brew 'git'
+brew 'jujutsu'        # jj — modern VCS on top of git
+brew 'git-delta'      # better diffs, git pager
+brew 'lazygit'        # TUI git client
+brew 'ghq'            # repo organiser (clones to ~/dev/github.com/org/repo)
+brew 'git-mob'        # co-author tracking for pair/mob programming
+brew 'pipx'           # install Python CLI tools in isolated environments
 
 # ─── Kubernetes ───────────────────────────────────────────────────────────────
-brew "kubectl"
-brew "kubectx"        # kubectx + kubens (context/namespace switcher)
-brew "krew"           # kubectl plugin manager
-brew "k9s"            # TUI cluster browser
-brew "stern"          # multi-pod log tailing
-brew "kubeseal"       # sealed secrets CLI
-brew "kind"           # Kubernetes-in-Docker
-brew "minio/minio/mc" # MinIO client (S3-compatible object storage CLI)
+brew 'kubectl'
+brew 'kubectx'        # kubectx + kubens (context/namespace switcher)
+brew 'krew'           # kubectl plugin manager
+brew 'k9s'            # TUI cluster browser
+brew 'stern'          # multi-pod log tailing
+brew 'kubeseal'       # sealed secrets CLI
+brew 'kind'           # Kubernetes-in-Docker
+brew 'minio/minio/mc' # MinIO client (S3-compatible object storage CLI)
 
 # ─── Go toolchain (via Homebrew, not mise — system-wide linters/release tools) ─
-brew "golangci-lint"  # meta-linter
-brew "goreleaser"     # release automation (OSS — see note below re: pro)
-brew "golang-migrate" # database migrations CLI
+brew 'golangci-lint'  # meta-linter
+brew 'goreleaser'     # release automation (OSS — see note below re: pro)
+brew 'golang-migrate' # database migrations CLI
 # goreleaser-pro: install separately with licence key:
 #   brew install goreleaser/tap/goreleaser-pro
 #   export GORELEASER_KEY="<key>"  (add to a local .envrc, never commit)
 
 # ─── GitHub CLI ───────────────────────────────────────────────────────────────
-brew "gh"
+brew 'gh'
 
 # ─── Cloudflare ───────────────────────────────────────────────────────────────
-brew "cloudflare-wrangler"
+brew 'cloudflare-wrangler'
 
 # ─── Terminal multiplexers ────────────────────────────────────────────────────
-brew "zellij"         # primary multiplexer (floating panes, layout files)
-brew "tmux"           # kept for SSH/remote use
+brew 'zellij'         # primary multiplexer (floating panes, layout files)
+brew 'tmux'           # kept for SSH/remote use
 
 # ─── Editor ───────────────────────────────────────────────────────────────────
-brew "neovim"         # LazyVim starter installs on first nvim launch
+brew 'neovim' # LazyVim starter installs on first nvim launch
 
 # ─── Modern CLI replacements ──────────────────────────────────────────────────
-brew "bat"            # cat with syntax highlighting
-brew "eza"            # ls replacement (maintained fork of exa)
-brew "fd"             # find replacement
-brew "ripgrep"        # grep replacement
-brew "dust"           # du replacement
-brew "btop"           # top replacement
-brew "sd"             # sed replacement (simpler syntax)
-brew "xh"             # curl replacement (friendlier HTTP client)
+brew 'bat'            # cat with syntax highlighting
+brew 'eza'            # ls replacement (maintained fork of exa)
+brew 'fd'             # find replacement
+brew 'ripgrep'        # grep replacement
+brew 'dust'           # du replacement
+brew 'btop'           # top replacement
+brew 'sd'             # sed replacement (simpler syntax)
+brew 'xh'             # curl replacement (friendlier HTTP client)
 
 # ─── Work utils ───────────────────────────────────────────────────────────────
-brew "yq"
-brew "watch"
+brew 'yq'
+brew 'watch'
+brew 'lastpass-cli'
+brew 'fluxcd/tap/flux'
 
 # ─── Utilities ────────────────────────────────────────────────────────────────
-brew "libyaml"        # required to compile Ruby's psych extension (YAML parser)
-brew "gnupg"          # GPG for commit signing
-brew "pinentry-mac"   # macOS pinentry dialog for GPG passphrase
-brew "syncthing"      # P2P sync for Documents / notes
+brew 'libyaml'        # required to compile Ruby's psych extension (YAML parser)
+brew 'gnupg'          # GPG for commit signing
+brew 'pinentry-mac'   # macOS pinentry dialog for GPG passphrase
+brew 'syncthing'      # P2P sync for Documents / notes
 
 # ─── Secrets / SSH ────────────────────────────────────────────────────────────
-cask "bitwarden"      # password manager + SSH agent
+cask 'bitwarden' # password manager + SSH agent
 
 # ─── Keyboard ─────────────────────────────────────────────────────────────────
-cask "karabiner-elements"  # key remapper
-brew "goku"                # write Karabiner config in readable EDN, compiles to JSON
+cask 'karabiner-elements'  # key remapper
+brew 'goku'                # write Karabiner config in readable EDN, compiles to JSON
 
 # ─── Casks ────────────────────────────────────────────────────────────────────
-cask "ghostty"         # primary terminal (fast, native, config-file driven)
-cask "cursor"          # AI IDE — daily driver
-cask "claude"          # Claude desktop app
-cask "claude-code"     # Claude CLI
-cask "chatgpt"         # ChatGPT desktop app
-cask "zen"             # Arc replacement (Firefox-based, open source)
-cask "arc"             # kept during transition to Zen
-cask "raycast"         # launcher + window management + clipboard history (replaces rectangle, maccy, hiddenbar)
-cask "jordanbaird-ice" # hiddenbar alternative
-cask "thebrowsercompany-dia"
-cask "slack"
-cask "discord"
-cask "zoom"
-cask "logi-options+"
-cask "whatsapp"
-cask "elgato-stream-deck"
-cask "dropbox"
-cask "docker-desktop"
-cask "deluge"
-cask "plex"
-cask "plex-media-server"
-cask "vlc"
-cask "rowboat"
+cask 'ghostty'         # primary terminal (fast, native, config-file driven)
+cask 'cursor'          # AI IDE — daily driver
+cask 'claude'          # Claude desktop app
+cask 'claude-code'     # Claude CLI
+cask 'chatgpt'         # ChatGPT desktop app
+cask 'zen'             # Arc replacement (Firefox-based, open source)
+cask 'arc'             # kept during transition to Zen
+cask 'raycast'         # launcher + window management + clipboard history (replaces rectangle, maccy, hiddenbar)
+cask 'jordanbaird-ice' # hiddenbar alternative
+cask 'thebrowsercompany-dia'
+cask 'slack'
+cask 'discord'
+cask 'zoom'
+cask 'logi-options+'
+cask 'whatsapp'
+cask 'elgato-stream-deck'
+cask 'dropbox'
+cask 'docker-desktop'
+cask 'deluge'
+cask 'plex'
+cask 'plex-media-server'
+cask 'vlc'
+cask 'rowboat'

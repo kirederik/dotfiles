@@ -1,45 +1,42 @@
--- GitHub Copilot — inline ghost-text suggestions.
--- Uses copilot.lua's native suggestion UI.
+-- GitHub Copilot via blink.cmp integration.
+-- copilot.lua acts as the backend (auth, LSP connection); suggestions are
+-- surfaced inside blink.cmp's popup via blink-cmp-copilot rather than as
+-- a separate ghost-text layer — this prevents the two UIs from overlapping.
 -- After install, authenticate once with :Copilot auth
 return {
+  -- Backend: disable built-in suggestion/panel since blink owns the UI.
   {
     "zbirenbaum/copilot.lua",
     cmd = "Copilot",
     event = "InsertEnter",
-    -- Explicit keymap via `keys` takes priority over blink.cmp's <C-y> binding.
-    -- accept is disabled in opts to prevent the plugin registering its own
-    -- lower-priority version of the same key.
-    keys = {
-      {
-        "<Tab>",
-        function()
-          local s = require("copilot.suggestion")
-          if s.is_visible() then s.accept() end
-        end,
-        mode = "i",
-        desc = "Accept Copilot suggestion",
-      },
-    },
     opts = {
-      suggestion = {
-        enabled = true,
-        auto_trigger = true,
-        -- hide ghost text while a completion menu is open, preventing stacked/overlapping
-        -- suggestion text from copilot.lua and blink.cmp appearing simultaneously.
-        hide_during_completion = true,
-        debounce = 75,
-        keymap = {
-          accept = false, -- handled via keys above; Tab only fires when suggestion is visible
-          accept_word = "<C-Right>",
-          next = "<M-]>",
-          prev = "<M-[>",
-          dismiss = "<C-]>",
-        },
-      },
+      suggestion = { enabled = false },
       panel = { enabled = false },
-      filetypes = {
-        markdown = true,
-        help = false,
+      filetypes = { markdown = true, help = false },
+    },
+  },
+
+  -- Source adapter: feeds copilot completions into blink.cmp.
+  { "giuxtaposition/blink-cmp-copilot" },
+
+  -- Wire the source into blink.cmp and add Ctrl+j to accept.
+  {
+    "saghen/blink.cmp",
+    opts = {
+      keymap = {
+        ["<C-j>"] = { "accept", "fallback" },
+        ["<CR>"]  = { "fallback" }, -- never accept on Enter; use <C-j> instead
+      },
+      sources = {
+        default = { "copilot", "lsp", "path", "snippets", "buffer" },
+        providers = {
+          copilot = {
+            name = "Copilot",
+            module = "blink-cmp-copilot",
+            score_offset = 100, -- float to top of completion list
+            async = true,
+          },
+        },
       },
     },
   },

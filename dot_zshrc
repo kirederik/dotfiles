@@ -6,6 +6,23 @@ fi
 # ─── Completions (must run before antidote so plugins can call compdef) ───────
 autoload -Uz compinit && compinit
 
+# Complete bookmark names for all jj subcommands that accept them.
+# The generated script uses _default everywhere; we patch three patterns:
+#   ::names -- ...:_default'  → positional bookmark args (advance/create/delete/etc.)
+#   ]:BOOKMARK:_default'      → jj git push --bookmark/-b
+#   :old -- ...:_default'     → jj bookmark rename (first arg)
+function _jj_bookmark_names() {
+  local -a bookmarks
+  bookmarks=(${(f)"$(jj bookmark list --template 'name ++ "\n"' --no-pager 2>/dev/null)"})
+  compadd -a bookmarks
+}
+source <(
+  jj util completion zsh | sed \
+    -e "s/::names -- [^:]*:_default'/:names:_jj_bookmark_names'/g" \
+    -e "s/]:BOOKMARK:_default'/]:BOOKMARK:_jj_bookmark_names'/g" \
+    -e "s/:old -- The old name of the bookmark:_default'/:old:_jj_bookmark_names'/g"
+)
+
 # ─── Antidote plugin manager ──────────────────────────────────────────────────
 source "$(brew --prefix)/opt/antidote/share/antidote/antidote.zsh"
 antidote load
@@ -108,6 +125,20 @@ alias lg='lazygit'
 # Homebrew — sync installed packages to Brewfile (install missing + remove unlisted)
 alias brewup='brew bundle install --file=~/.dotfiles/Brewfile && brew bundle cleanup --force --file=~/.dotfiles/Brewfile'
 
+# Update all non-Homebrew tools: mise runtimes, pipx packages, krew plugins.
+function toolsup() {
+  local _section() { print -P "\n%B%F{cyan}── $1 ──%f%b" }
+
+  _section "mise runtimes (go · node · ruby · bun)"
+  mise upgrade
+
+  _section "pipx packages"
+  pipx upgrade-all
+
+  _section "krew plugins"
+  kubectl krew upgrade
+}
+
 # Mob programming — keeps git mob and jj in sync
 function mob() {
   if [[ $# -eq 0 ]]; then
@@ -158,9 +189,14 @@ function zjd() {
 
 alias zjl='zellij list-sessions'
 
+# ─── Zellij: lock/unlock helpers ─────────────────────────────────────────────
+# zlock — lock from the terminal prompt or a shell command in any context.
+# Mirrors the Ctrl+Space,l keybind but usable without the prefix.
+alias zlock='zellij action switch-mode locked'
+
 # ─── Zellij: auto-lock for TUI apps ──────────────────────────────────────────
 # Locks Zellij when a TUI app launches, unlocks when it exits.
-# Manual Ctrl+G to unlock mid-session; Ctrl+Space,l to re-lock.
+# Manual Ctrl+G to unlock mid-session; zlock or Ctrl+Space,l to re-lock.
 _zellij_wrap() {
   local cmd="$1"
   eval "function $cmd() {
@@ -217,6 +253,9 @@ unset _bw_sock
 
 # ─── krew ─────────────────────────────────────────────────────────────────────
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+
+# ─── Docker (OrbStack) ────────────────────────────────────────────────────────
+export DOCKER_CONTEXT=orbstack
 
 # ─── Go ───────────────────────────────────────────────────────────────────────
 export GOPATH="$HOME/go"

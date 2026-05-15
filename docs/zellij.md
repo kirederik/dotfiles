@@ -15,8 +15,10 @@ Theme: Catppuccin Mocha.
 This is implemented as shell wrappers in `~/.zshrc` — **not** a plugin.
 
 Manual controls:
-- `ctrl+g` — unlock (exit Locked → Normal) without closing the app
-- `Ctrl+Space` → `l` — re-enter Locked mode manually
+- `ctrl+g` — unlock (Locked → Normal)
+- `Ctrl+Space` → `l` — re-lock (Normal → Locked)
+- `zlock` — re-lock from the terminal prompt
+- `<leader>zl` — re-lock from inside nvim
 
 > **Note:** `atuin` and `fzf` are intentionally excluded from the wrap list — atuin installs zsh hooks that fire on every keystroke, which would cause constant mode-switching.
 

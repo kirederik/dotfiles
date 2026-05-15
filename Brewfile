@@ -67,6 +67,13 @@ brew 'yq'
 brew 'watch'
 brew 'lastpass-cli'
 brew 'fluxcd/tap/flux'
+brew 'bats-core'
+brew 'helm'
+brew 'gitea'
+brew 'coreutils' # for `realpath` (used in dotfiles)
+brew 'crane'
+brew 'poppler'   # pdftotext and other tools
+brew 'rtk'       # token saver
 
 # ─── Utilities ────────────────────────────────────────────────────────────────
 brew 'libyaml'        # required to compile Ruby's psych extension (YAML parser)
@@ -99,9 +106,10 @@ cask 'logi-options+'
 cask 'whatsapp'
 cask 'elgato-stream-deck'
 cask 'dropbox'
-cask 'docker-desktop'
+cask 'orbstack'        # Docker Desktop replacement (faster, lighter)
 cask 'deluge'
 cask 'plex'
 cask 'plex-media-server'
 cask 'vlc'
 cask 'rowboat'
+cask 'steam'

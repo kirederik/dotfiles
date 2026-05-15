@@ -44,21 +44,28 @@ Additional servers in `lua/plugins/lang.lua`:
 | `golangci-lint` | Go multi-linter (uses Homebrew binary) |
 | `markdownlint-cli2` | Markdown lint |
 | `vale` | Prose linter |
+| `helm_ls` | Helm chart templates — `.Values.*` completions, built-in functions, hover docs. Filetype detection in `options.lua` maps `templates/*.yaml` → `helm` so yamlls (which breaks on `{{ }}`) stays silent. |
 
 ---
 
 ## Copilot
 
-Plugin: `zbirenbaum/copilot.lua` (native ghost text, no nvim-cmp/blink integration).
+Plugin: `zbirenbaum/copilot.lua` + `blink-cmp-copilot`. Copilot suggestions appear as items inside the blink.cmp completion popup (labelled "Copilot", ranked above LSP results) — no separate ghost-text layer, no overlapping UIs. Accept with the normal blink.cmp confirm key (`Enter`).
+
+---
+
+## Task runner (overseer)
+
+Run arbitrary shell commands from inside nvim and re-run them on demand.
 
 | Key | Action |
 |---|---|
-| `Tab` | Accept suggestion (insert mode, only when ghost text is visible) |
-| `Ctrl+Right` | Accept next word |
-| `Alt+]` / `Alt+[` | Next / previous suggestion |
-| `Ctrl+]` | Dismiss suggestion |
+| `<leader>or` | Run a command or pick a task template |
+| `<leader>ow` | Toggle the task output panel |
+| `<leader>oR` | Re-run the last task |
+| `<leader>oa` | Task action menu (stop, restart, edit…) |
 
-Ghost text is hidden while a completion popup is open (`hide_during_completion = true`).
+Useful for: `bats ./test/`, `ginkgo ./pkg/...`, `make test`, `helm template .`, etc.
 
 ---
 
@@ -70,11 +77,14 @@ Go tests run via `neotest` + `neotest-go`. Results appear inline next to test fu
 |---|---|
 | `<leader>tt` | Run test nearest to cursor |
 | `<leader>tT` | Run all tests in file |
+| `<leader>tp` | Run all tests in package (use this for Ginkgo) |
 | `<leader>tr` | Re-run last test |
 | `<leader>ts` | Toggle test summary panel |
 | `<leader>to` | Show test output |
 | `<leader>tO` | Toggle output panel |
 | `<leader>tS` | Stop test run |
+
+> **Ginkgo:** Two adapters are active — `neotest-go` for `func TestXxx` functions and `neotest-ginkgo` for Ginkgo v2 `Describe`/`It` spec files. Use `<leader>tp` to run all tests in the package (works for both). The neotest summary (`<leader>ts`) shows the full Ginkgo spec hierarchy with pass/fail. For full Ginkgo output with colors, use `<leader>tg` (sends to Zellij run tab).
 
 ---
 
@@ -84,10 +94,24 @@ Go tests run via `neotest` + `neotest-go`. Results appear inline next to test fu
 |---|---|---|
 | `Enter` | Normal | Save file (`:w`) |
 | `<leader>um` | Normal | Toggle Markdown inline render |
+| `<leader>zl` | Normal | Lock Zellij session (no-op outside Zellij) |
 | `gwip` | Normal | Reflow current paragraph to `textwidth` |
 | `gwap` | Normal | Reflow paragraph + surrounding blank lines |
 
 > `gw` (not `gq`) is preferred for prose — it always uses the built-in reflow algorithm rather than the LSP formatter. `textwidth` is set to 80.
+
+---
+
+## Zellij split-pane runner
+
+Commands run in a right-split pane in the **same Zellij tab** as the nvim instance that triggered them. Each tab gets its own run pane — multiple nvim instances in different tabs are fully independent. Falls back to a terminal split inside nvim when not in Zellij.
+
+| Key | Action |
+|---|---|
+| `<leader>tg` | Ginkgo: run current package (`ginkgo -v <dir>`) |
+| `<leader>tG` | Ginkgo: run all packages recursively (`ginkgo -v -r ./...`) |
+| `<leader>tb` | Bats: run current file |
+| `<leader>tx` | Prompt for any command and run it in the split pane |
 
 ---
 
@@ -109,6 +133,7 @@ Go tests run via `neotest` + `neotest-go`. Results appear inline next to test fu
 | `lua/config/options.lua` | Custom options (textwidth, colorcolumn) |
 | `lua/plugins/lang.lua` | Extra LSPs, Mason packages, golangci-lint, markdown render, pyright suppression |
 | `lua/plugins/copilot.lua` | GitHub Copilot ghost text |
+| `lua/overseer/strategy/zellij.lua` | Overseer strategy: routes tasks to Zellij "run" tab |
 | `lua/plugins/theme.lua` | Catppuccin Mocha theme |
 
 ---

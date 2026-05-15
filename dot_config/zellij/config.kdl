@@ -10,44 +10,33 @@ default_layout "default"
 copy_on_select true
 scroll_buffer_size 10000
 pane_frames false
+show_startup_tips false
 
 on_force_close "detach"
 
 keybinds clear-defaults=false {
 
     // ── Remove noisy default Alt bindings from status bar ─────────────────────
-    // With clear-defaults=false the shared_except "locked" defaults include
-    // "Alt +" / "Alt =" → Resize "Increase" and "Alt -" → Resize "Decrease".
-    // Unbinding them here removes them from all modes so they don't clutter
-    // the status bar.
     shared_except "locked" {
         unbind "Alt +" "Alt ="
         unbind "Alt -"
         // Free Ctrl+G so it passes through to zsh (ghq repo jumper).
-        // Entering locked mode is handled automatically by zellij-autolock.
         unbind "Ctrl g"
     }
-
 
     // ── Normal mode ────────────────────────────────────────────────────────
     normal {
         // Ctrl+Space arms the leader — mirrors tmux prefix
-        bind "Ctrl Space" { SwitchToMode "Tmux"; }
+        bind "Ctrl space" { SwitchToMode "tmux"; }
 
         // Zellij's own mode UI (keep accessible)
-        bind "Ctrl p" { SwitchToMode "Pane"; }
-        bind "Ctrl t" { SwitchToMode "Tab"; }
-        bind "Ctrl n" { SwitchToMode "Resize"; }
-        bind "Ctrl o" { SwitchToMode "Session"; }
+        bind "Ctrl p" { SwitchToMode "pane"; }
+        bind "Ctrl t" { SwitchToMode "tab"; }
+        bind "Ctrl n" { SwitchToMode "resize"; }
+        bind "Ctrl o" { SwitchToMode "session"; }
         bind "Ctrl q" { Quit; }
 
-        // Pass through emacs line-nav to the shell.
-        // Write the raw bytes instead of relying on pass-through, because Ghostty
-        // uses the kitty keyboard protocol which sends Ctrl+A as \x1b[97;5u —
-        // Zellij would forward that sequence and zsh readline wouldn't recognise it.
-        // Write 1 → \x01 (SOH = beginning-of-line), Write 5 → \x05 (ENQ = end-of-line),
-        // Write 11 → \x0b (VT = kill to end-of-line).
-        // WriteChars "\u{1b}." → ESC+. = yank-last-arg (insert last argument).
+        // Pass through emacs line-nav and ESC+. to the shell.
         bind "Ctrl a" { Write 1; }
         bind "Ctrl e" { Write 5; }
         bind "Ctrl k" { Write 11; }
@@ -55,127 +44,119 @@ keybinds clear-defaults=false {
     }
 
     // ── Locked mode ────────────────────────────────────────────────────────
-    // All keys pass through to the terminal. Managed automatically by
-    // zellij-autolock. Ctrl+g to manually unlock if needed.
     locked {
-        bind "Ctrl g" { SwitchToMode "Normal"; }
+        bind "Ctrl g" { SwitchToMode "normal"; }
     }
 
     // ── Tmux (leader) mode ─────────────────────────────────────────────────
-    // Armed by Ctrl+Space. Each binding executes and returns to Normal,
-    // matching the tmux one-shot prefix model.
     tmux {
-        // Cancel — Esc aborts, Ctrl+Space toggles to last active tab (like tmux last-window)
-        bind "Esc" { SwitchToMode "Normal"; }
-        bind "Ctrl Space" { ToggleTab; SwitchToMode "Normal"; }
+        bind "Esc" { SwitchToMode "normal"; }
+        bind "Ctrl space" { ToggleTab; SwitchToMode "normal"; }
 
-        // Pane navigation  (was C-M-h/j/k/l unprefixed)
-        bind "h" { MoveFocus "Left";  SwitchToMode "Normal"; }
-        bind "j" { MoveFocus "Down";  SwitchToMode "Normal"; }
-        bind "k" { MoveFocus "Up";    SwitchToMode "Normal"; }
-        bind "l" { MoveFocus "Right"; SwitchToMode "Normal"; }
-        bind "o" { FocusNextPane;     SwitchToMode "Normal"; }  // cycle panes
+        // Pane navigation
+        bind "h" { MoveFocus "left";  SwitchToMode "normal"; }
+        bind "j" { MoveFocus "down";  SwitchToMode "normal"; }
+        bind "k" { MoveFocus "up";    SwitchToMode "normal"; }
+        bind "l" { MoveFocus "right"; SwitchToMode "normal"; }
+        bind "o" { FocusNextPane;     SwitchToMode "normal"; }
 
         // Pane management
-        bind "x" { CloseFocus;              SwitchToMode "Normal"; }  // kill pane
-        bind "z" { ToggleFocusFullscreen;   SwitchToMode "Normal"; }  // zoom
-        bind "v" { NewPane "Right";         SwitchToMode "Normal"; }  // vertical split
-        bind "-" { NewPane "Down";          SwitchToMode "Normal"; }  // horizontal split
-        bind "f" { ToggleFloatingPanes;     SwitchToMode "Normal"; }  // floating pane
+        bind "x" { CloseFocus;              SwitchToMode "normal"; }
+        bind "z" { ToggleFocusFullscreen;   SwitchToMode "normal"; }
+        bind "v" { NewPane "right";         SwitchToMode "normal"; }
+        bind "-" { NewPane "down";          SwitchToMode "normal"; }
+        bind "f" { ToggleFloatingPanes;     SwitchToMode "normal"; }
 
-        // Tab (window) navigation  (was C-M-n/p and M-Tab unprefixed)
-        bind "n"   { GoToNextTab;       SwitchToMode "Normal"; }
-        bind "p"   { GoToPreviousTab;   SwitchToMode "Normal"; }
-        bind "Tab" { GoToPreviousTab;   SwitchToMode "Normal"; }  // last window
-        bind "c"   { NewTab;            SwitchToMode "Normal"; }
+        // Tab navigation
+        bind "n"   { GoToNextTab;       SwitchToMode "normal"; }
+        bind "p"   { GoToPreviousTab;   SwitchToMode "normal"; }
+        bind "tab" { GoToPreviousTab;   SwitchToMode "normal"; }
+        bind "c"   { NewTab;            SwitchToMode "normal"; }
 
-        // Tab reordering  (was M-< / M-> unprefixed)
-        bind "<" { MoveTab "Left";  SwitchToMode "Normal"; }
-        bind ">" { MoveTab "Right"; SwitchToMode "Normal"; }
+        // Tab reordering
+        bind "<" { MoveTab "left";  SwitchToMode "normal"; }
+        bind ">" { MoveTab "right"; SwitchToMode "normal"; }
 
-        // Scroll / copy mode  (was C-M-[ unprefixed)
-        // Note: selection in scroll mode uses mouse or Shift+arrow — there's
-        // no 'v' visual-select like in tmux. 'y' copies and exits.
-        bind "[" { SwitchToMode "Scroll"; }
+        // Scroll / copy mode
+        bind "[" { SwitchToMode "scroll"; }
 
-        // Jump to tab by number (like tmux C-b 1..9)
-        bind "1" { GoToTab 1; SwitchToMode "Normal"; }
-        bind "2" { GoToTab 2; SwitchToMode "Normal"; }
-        bind "3" { GoToTab 3; SwitchToMode "Normal"; }
-        bind "4" { GoToTab 4; SwitchToMode "Normal"; }
-        bind "5" { GoToTab 5; SwitchToMode "Normal"; }
-        bind "6" { GoToTab 6; SwitchToMode "Normal"; }
-        bind "7" { GoToTab 7; SwitchToMode "Normal"; }
-        bind "8" { GoToTab 8; SwitchToMode "Normal"; }
-        bind "9" { GoToTab 9; SwitchToMode "Normal"; }
+        // Jump to tab by number
+        bind "1" { GoToTab 1; SwitchToMode "normal"; }
+        bind "2" { GoToTab 2; SwitchToMode "normal"; }
+        bind "3" { GoToTab 3; SwitchToMode "normal"; }
+        bind "4" { GoToTab 4; SwitchToMode "normal"; }
+        bind "5" { GoToTab 5; SwitchToMode "normal"; }
+        bind "6" { GoToTab 6; SwitchToMode "normal"; }
+        bind "7" { GoToTab 7; SwitchToMode "normal"; }
+        bind "8" { GoToTab 8; SwitchToMode "normal"; }
+        bind "9" { GoToTab 9; SwitchToMode "normal"; }
 
-        // Session manager  (replaces tmux session management)
-        bind "s" "g" { SwitchToMode "Session"; }
+        // Session manager
+        bind "s" "g" { SwitchToMode "session"; }
 
         // Manual lock — pass all keys to the focused app (e.g. nvim)
-        // Unlock with Ctrl+g (bound in locked mode)
-        bind "l" { SwitchToMode "Locked"; }
+        bind "l" { SwitchToMode "locked"; }
     }
 
-    // ── Scroll mode (copy mode equivalent) ────────────────────────────────
+    // ── Scroll mode ────────────────────────────────────────────────────────
     scroll {
-        bind "Esc" "q"    { SwitchToMode "Normal"; }
-        bind "e"          { EditScrollback; }       // open buffer in $EDITOR
-        bind "j" "Down"   { ScrollDown; }
-        bind "k" "Up"     { ScrollUp; }
+        bind "Esc" "q"    { SwitchToMode "normal"; }
+        bind "e"          { EditScrollback; }
+        bind "j" "down"   { ScrollDown; }
+        bind "k" "up"     { ScrollUp; }
         bind "Ctrl d"     { HalfPageScrollDown; }
         bind "Ctrl u"     { HalfPageScrollUp; }
         bind "Ctrl f"     { PageScrollDown; }
         bind "Ctrl b"     { PageScrollUp; }
         bind "G"          { ScrollToBottom; }
         bind "g"          { ScrollToTop; }
-        bind "/"          { SwitchToMode "EnterSearch"; }
+        bind "/"          { SwitchToMode "entersearch"; }
     }
 
     // ── Search mode ────────────────────────────────────────────────────────
     search {
-        bind "Esc" "Enter" { SwitchToMode "Scroll"; }
+        bind "Esc" "enter" { SwitchToMode "scroll"; }
         bind "n"           { Search "down"; }
         bind "N"           { Search "up"; }
     }
 
     // ── Pane mode ─────────────────────────────────────────────────────────
     pane {
-        bind "Esc" "Ctrl p" { SwitchToMode "Normal"; }
-        bind "h" "Left"  { MoveFocus "Left"; }
-        bind "j" "Down"  { MoveFocus "Down"; }
-        bind "k" "Up"    { MoveFocus "Up"; }
-        bind "l" "Right" { MoveFocus "Right"; }
-        bind "v"         { NewPane "Right"; SwitchToMode "Normal"; }
-        bind "-"         { NewPane "Down";  SwitchToMode "Normal"; }
-        bind "x"         { CloseFocus;      SwitchToMode "Normal"; }
-        bind "z"         { ToggleFocusFullscreen; SwitchToMode "Normal"; }
-        bind "f"         { ToggleFloatingPanes;   SwitchToMode "Normal"; }
-        bind "r"         { SwitchToMode "RenamePane"; }
+        bind "Esc" "Ctrl p" { SwitchToMode "normal"; }
+        bind "h" "left"  { MoveFocus "left"; }
+        bind "j" "down"  { MoveFocus "down"; }
+        bind "k" "up"    { MoveFocus "up"; }
+        bind "l" "right" { MoveFocus "right"; }
+        bind "v"         { NewPane "right"; SwitchToMode "normal"; }
+        bind "-"         { NewPane "down";  SwitchToMode "normal"; }
+        bind "x"         { CloseFocus;      SwitchToMode "normal"; }
+        bind "z"         { ToggleFocusFullscreen; SwitchToMode "normal"; }
+        bind "f"         { ToggleFloatingPanes;   SwitchToMode "normal"; }
+        bind "r"         { SwitchToMode "renamepane"; }
     }
 
     // ── Tab mode ──────────────────────────────────────────────────────────
     tab {
-        bind "Esc" "Ctrl t" { SwitchToMode "Normal"; }
-        bind "n"            { NewTab; SwitchToMode "Normal"; }
-        bind "x"            { CloseTab; SwitchToMode "Normal"; }
-        bind "h" "Left"     { GoToPreviousTab; }
-        bind "l" "Right"    { GoToNextTab; }
-        bind "<"            { MoveTab "Left"; }
-        bind ">"            { MoveTab "Right"; }
-        bind "r"            { SwitchToMode "RenameTab"; }
+        bind "Esc" "Ctrl t" { SwitchToMode "normal"; }
+        bind "n"            { NewTab; SwitchToMode "normal"; }
+        bind "x"            { CloseTab; SwitchToMode "normal"; }
+        bind "h" "left"     { GoToPreviousTab; }
+        bind "l" "right"    { GoToNextTab; }
+        bind "<"            { MoveTab "left"; }
+        bind ">"            { MoveTab "right"; }
+        bind "r"            { SwitchToMode "renametab"; }
     }
 
     // ── Resize mode ───────────────────────────────────────────────────────
     resize {
-        bind "Esc" "Ctrl n" { SwitchToMode "Normal"; }
-        bind "h" "Left"  { Resize "Increase Left"; }
-        bind "j" "Down"  { Resize "Increase Down"; }
-        bind "k" "Up"    { Resize "Increase Up"; }
-        bind "l" "Right" { Resize "Increase Right"; }
-        bind "H"         { Resize "Decrease Left"; }
-        bind "J"         { Resize "Decrease Down"; }
-        bind "K"         { Resize "Decrease Up"; }
-        bind "L"         { Resize "Decrease Right"; }
+        bind "Esc" "Ctrl n" { SwitchToMode "normal"; }
+        bind "h" "left"  { Resize "Increase left"; }
+        bind "j" "down"  { Resize "Increase down"; }
+        bind "k" "up"    { Resize "Increase up"; }
+        bind "l" "right" { Resize "Increase right"; }
+        bind "H"         { Resize "Decrease left"; }
+        bind "J"         { Resize "Decrease down"; }
+        bind "K"         { Resize "Decrease up"; }
+        bind "L"         { Resize "Decrease right"; }
     }
 }

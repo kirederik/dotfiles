@@ -1,6 +1,6 @@
 # Scripts and repo files that should not be applied to $HOME by chezmoi.
-bun-tools.sh
-bootstrap.sh
+Brewfile
+./*.sh
 ./CLAUDE.md
 ./CONTEXT.md
 ./README.md

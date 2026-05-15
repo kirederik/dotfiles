@@ -51,6 +51,13 @@ Originals accessible as `gcat`, `gls`, `ggrep`, `gsed`.
 |---|---|
 | `brewup` | `brew bundle install` + `brew bundle cleanup --force` — syncs installed packages to Brewfile |
 
+### Maintenance
+
+| Command | Updates |
+|---|---|
+| `brewup` | Homebrew packages (install missing, remove unlisted) |
+| `toolsup` | mise runtimes (Go, Node, Ruby, Bun) · pipx packages · krew plugins |
+
 ### Zellij sessions
 
 | Alias/Function | Effect |

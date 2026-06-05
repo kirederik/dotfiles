@@ -50,6 +50,7 @@ Originals accessible as `gcat`, `gls`, `ggrep`, `gsed`.
 | Alias | Effect |
 |---|---|
 | `brewup` | `brew bundle install` + `brew bundle cleanup --force` — syncs installed packages to Brewfile |
+| `brewadd <name>` | Auto-detect formula vs cask, append it to the Brewfile, and install it |
 
 ### Maintenance
 

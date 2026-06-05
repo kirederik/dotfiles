@@ -30,6 +30,7 @@ brew 'stern'          # multi-pod log tailing
 brew 'kubeseal'       # sealed secrets CLI
 brew 'kind'           # Kubernetes-in-Docker
 brew 'minio/minio/mc' # MinIO client (S3-compatible object storage CLI)
+brew 'eksctl'
 
 # ─── Go toolchain (via Homebrew, not mise — system-wide linters/release tools) ─
 brew 'golangci-lint'  # meta-linter
@@ -38,6 +39,9 @@ brew 'golang-migrate' # database migrations CLI
 # goreleaser-pro: install separately with licence key:
 #   brew install goreleaser/tap/goreleaser-pro
 #   export GORELEASER_KEY="<key>"  (add to a local .envrc, never commit)
+
+# ─── Databases ──────────────────────────────────────────────────────────────
+brew 'libpq' # Postgres client (psql) — keg-only; for Supabase/Postgres DDL
 
 # ─── GitHub CLI ───────────────────────────────────────────────────────────────
 brew 'gh'
@@ -74,12 +78,16 @@ brew 'coreutils' # for `realpath` (used in dotfiles)
 brew 'crane'
 brew 'poppler'   # pdftotext and other tools
 brew 'rtk'       # token saver
+brew 'kubebuilder'
 
 # ─── Utilities ────────────────────────────────────────────────────────────────
 brew 'libyaml'        # required to compile Ruby's psych extension (YAML parser)
 brew 'gnupg'          # GPG for commit signing
 brew 'pinentry-mac'   # macOS pinentry dialog for GPG passphrase
 brew 'syncthing'      # P2P sync for Documents / notes
+brew 'flyctl'
+brew 'glow'
+brew 'postgres'
 
 # ─── Secrets / SSH ────────────────────────────────────────────────────────────
 cask 'bitwarden' # password manager + SSH agent
@@ -111,5 +119,7 @@ cask 'deluge'
 cask 'plex'
 cask 'plex-media-server'
 cask 'vlc'
-cask 'rowboat'
 cask 'steam'
+cask 'obs'
+cask 'codex'
+cask 'kiro'

@@ -1,6 +1,10 @@
 -- Absolute line numbers (LazyVim enables relativenumber by default)
 vim.opt.relativenumber = false
 
+-- Show raw markdown syntax (LazyVim sets conceallevel=2, which hides [text](url)
+-- brackets and only reveals them on the cursor line).
+vim.opt.conceallevel = 0
+
 -- Indentation (LazyVim defaults to 2 spaces)
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4

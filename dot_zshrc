@@ -125,6 +125,32 @@ alias lg='lazygit'
 # Homebrew — sync installed packages to Brewfile (install missing + remove unlisted)
 alias brewup='brew bundle install --file=~/.dotfiles/Brewfile && brew bundle cleanup --force --file=~/.dotfiles/Brewfile'
 
+# Add a formula/cask to the Brewfile (auto-detecting which) and install it.
+# Usage: brewadd <name> [more names...]
+function brewadd() {
+  local file="$HOME/.dotfiles/Brewfile"
+  [[ -z "$1" ]] && { echo "usage: brewadd <name> [more...]"; return 1; }
+  local name keyword flag line
+  for name in "$@"; do
+    if brew info --formula "$name" &>/dev/null; then
+      keyword='brew'; flag='--formula'
+    elif brew info --cask "$name" &>/dev/null; then
+      keyword='cask'; flag='--cask'
+    else
+      echo "✗ '$name' is not a known formula or cask — skipping"
+      continue
+    fi
+    line="$keyword '$name'"
+    if grep -qF "$line" "$file"; then
+      echo "• already in Brewfile: $line"
+    else
+      printf '%s\n' "$line" >> "$file"
+      echo "✓ added to Brewfile: $line"
+    fi
+    brew install "$flag" "$name"
+  done
+}
+
 # Update all non-Homebrew tools: mise runtimes, pipx packages, krew plugins.
 function toolsup() {
   local _section() { print -P "\n%B%F{cyan}── $1 ──%f%b" }
@@ -222,7 +248,7 @@ alias k='kubectl'
 alias kx='kubectx'
 alias kn='kubens'
 alias kp="kubectl --context kind-platform"
-alias kw="kubectl --context kind-work"
+alias kw="kubectl --context kind-worker"
 command -v kubectl &>/dev/null && source <(kubectl completion zsh) && compdef k=kubectl
 
 # ─── ghq + fzf: ctrl+g → fuzzy repo jumper ────────────────────────────────────

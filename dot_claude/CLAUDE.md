@@ -1,4 +1,5 @@
 ## Approach
+
 - Think before acting. Read existing files before writing code.
 - Be concise in output but thorough in reasoning.
 - Prefer editing over rewriting whole files.
@@ -10,7 +11,7 @@
 
 ## Dotfiles & Config
 
-- When debugging config/tooling issues, always check whether the change belongs in the dotfiles repo (portable across machines) rather than making local-only fixes.
+- When debugging config/tooling issues, always check whether the change belongs in the dotfiles repo (portable across machines, ~/.dotfiles) rather than making local-only fixes.
 - When installing new tools via brew, include the tool to the respective file in the dotfiles repository (~/.dotfiles)
 
 ## Coding
@@ -24,5 +25,10 @@
 
 - Before proposing a fix, verify the root cause by reading actual error output or reproducing the issue.
 - Do not guess at causes (e.g., architecture mismatches, command identities like 'mc') without evidence.
+
+## Git
+
+- Use `jj` when configured in the repository
+- Use `jj new <bookmark>` after pushing bookmark changes
 
 @RTK.md

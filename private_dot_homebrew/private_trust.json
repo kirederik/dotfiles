@@ -1,6 +1,9 @@
 {
-  "trustedtaps": [
-    "fluxcd/tap",
-    "https://github.com/minio/homebrew-stable.git"
+  "trustedformulae": [
+    "ezracerpac/tap/jj-waltz",
+    "fluxcd/tap/flux",
+    "hashicorp/tap/terraform",
+    "https://github.com/minio/homebrew-stable.git/mc",
+    "instruqt/tap/instruqt"
   ]
 }

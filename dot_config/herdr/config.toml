@@ -1,0 +1,39 @@
+# Herdr — terminal workspace manager for AI coding agents.
+# Agent-aware sibling to Zellij: workspace → tab → pane, with agent lifecycle
+# state (idle/working/blocked/done) in the sidebar. See docs/herdr.md.
+
+[theme]
+# Match the Zellij setup so both multiplexers look the same during migration.
+name = "catppuccin"
+
+[keys]
+# Same leader as Zellij's tmux mode (dot_config/zellij/config.kdl) so muscle
+# memory transfers. Herdr's prefix actions are already tmux-shaped:
+#   c new tab · n/p tab nav · v/minus split · z zoom · x close · hjkl focus
+prefix = "ctrl+space"
+
+# On-demand jj sidebar refresh. The precmd hook in .zshrc covers normal use;
+# this is for when a repo changes underneath you (another pane, an agent, a
+# `jj` run elsewhere). type = "shell" runs detached, so nothing steals focus.
+# alt+j to stay clear of prefix+j (focus pane down).
+[[keys.command]]
+key = "prefix+alt+j"
+type = "shell"
+command = "herdr plugin action invoke refresh --plugin mroth.jj-status"
+
+[ui]
+# Group the agent panel by space rather than by attention queue.
+agent_panel_sort = "spaces"
+
+# Sidebar rows for each space. Herdr's built-in `branch`/`git_status` read git
+# HEAD, which jj parks detached in colocated repos — so they show a bare hash,
+# not the bookmark. The $jj_* tokens come from the mroth.jj-status plugin
+# (`herdr plugin install mroth/herdr-jj-status`; needs jj + jq on PATH).
+# The plugin clears its tokens outside jj repos, so the git row still covers
+# pure-git checkouts. Drop that row if every repo you touch is jj.
+[ui.sidebar.spaces]
+rows = [
+  ["state_icon", "workspace"],
+  ["$jj_bookmark", "$jj_status"],
+  ["branch", "git_status"],
+]

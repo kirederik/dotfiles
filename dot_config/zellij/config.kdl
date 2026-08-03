@@ -5,11 +5,11 @@
 // Docs: https://zellij.dev/documentation/
 
 theme "catppuccin-mocha"
-simplified_ui false
+simplified_ui true
 default_layout "default"
 copy_on_select true
 scroll_buffer_size 10000
-pane_frames true
+pane_frames false
 show_startup_tips false
 
 on_force_close "detach"

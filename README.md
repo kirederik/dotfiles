@@ -103,6 +103,7 @@ mise upgrade
 
 - [Shell (zsh, aliases, keybindings)](docs/zsh.md)
 - [Zellij](docs/zellij.md)
+- [Herdr (agent workspace manager)](docs/herdr.md)
 - [Neovim / LazyVim](docs/neovim.md)
 - [jj (Jujutsu)](docs/jj.md)
 - [Git (identity, mob, conventional commits)](docs/git.md)

@@ -1,0 +1,61 @@
+{
+  "agentPushNotifEnabled": false,
+  "enabledPlugins": {
+    "superpowers-chrome@superpowers-marketplace": false,
+    "superpowers@claude-plugins-official": false,
+    "superpowers@superpowers-marketplace": true
+  },
+  "extraKnownMarketplaces": {
+    "superpowers-marketplace": {
+      "source": {
+        "repo": "obra/superpowers-marketplace",
+        "source": "github"
+      }
+    }
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "command": "rtk hook claude",
+            "type": "command"
+          }
+        ],
+        "matcher": "Bash"
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "command": "bash ~/.claude/hooks/herdr-agent-state.sh session",
+            "timeout": 10,
+            "type": "command"
+          }
+        ],
+        "matcher": "*"
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "command": "osascript -e 'display notification \"Task complete\" with title \"Claude Code\"'",
+            "type": "command"
+          }
+        ],
+        "matcher": ""
+      }
+    ]
+  },
+  "inputNeededNotifEnabled": true,
+  "model": "claude-opus-5",
+  "skipAutoPermissionPrompt": true,
+  "statusLine": {
+    "command": "python3 ~/.claude/statusline.py",
+    "refreshInterval": 10,
+    "type": "command"
+  },
+  "tui": "fullscreen"
+}

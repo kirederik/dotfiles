@@ -18,6 +18,7 @@
 	navigate = true
 	light = false
 	side-by-side = true
+	dark = true
 
 [merge]
 	conflictstyle = zdiff3
@@ -55,3 +56,11 @@
 
 [includeIf "gitdir:~/dev/github.com/syntasso/"]
 	path = ~/.gitconfig-work
+[credential "https://github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[git-mob]
+	co-author = Stella Englezou <stella@syntasso.io>

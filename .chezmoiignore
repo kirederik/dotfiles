@@ -1,6 +1,14 @@
 # Scripts and repo files that should not be applied to $HOME by chezmoi.
 Brewfile
 ./*.sh
+./AGENTS.md
 ./CLAUDE.md
 ./CONTEXT.md
 ./README.md
+
+# Machine-local: these carry a pairing `Co-authored-by` trailer that should stay
+# live-only, so chezmoi must not apply the trailer-free source over it. The
+# source copies are kept for reference but are no longer deployed — edit the
+# live files directly.
+.config/jj/config.toml
+.gitmessage

@@ -243,6 +243,22 @@ for cmd in nvim vim lazygit k9s btop fzf-make; do
 done
 unset -f _zellij_wrap
 
+# ─── Herdr: refresh the jj sidebar row after every command ────────────────────
+# The mroth.jj-status plugin only refreshes on `workspace.focused` (plus one-shot
+# lifecycle events), so a `jj commit`/`jj bookmark set` leaves the sidebar stale
+# until you leave and re-enter the space. Nudging it from precmd makes it live.
+#
+# `plugin action invoke` is fire-and-forget: it queues the sweep server-side and
+# returns in ~12ms, so this adds no perceptible prompt latency. Redirected and
+# `|| true` so a stopped Herdr server can never break the prompt.
+if [[ -n $HERDR_ENV ]] && command -v herdr &>/dev/null; then
+  autoload -Uz add-zsh-hook
+  _herdr_jj_refresh() {
+    herdr plugin action invoke refresh --plugin mroth.jj-status &>/dev/null || true
+  }
+  add-zsh-hook precmd _herdr_jj_refresh
+fi
+
 # Kubernetes
 alias k='kubectl'
 alias kx='kubectx'

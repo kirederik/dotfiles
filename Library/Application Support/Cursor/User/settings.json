@@ -1,4 +1,8 @@
 {
   "workbench.colorTheme": "Catppuccin Frappé",
-  "workbench.tree.indent": 24
+  "workbench.tree.indent": 24,
+  "window.autoDetectColorScheme": false,
+  "go.lintTool": "golangci-lint",
+  "go.lintOnSave": "workspace",
+  "vim.disableExtension": true
 }

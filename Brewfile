@@ -31,6 +31,7 @@ brew 'kubeseal'       # sealed secrets CLI
 brew 'kind'           # Kubernetes-in-Docker
 brew 'minio/minio/mc' # MinIO client (S3-compatible object storage CLI)
 brew 'eksctl'
+brew 'hashicorp/tap/terraform' # IaC; HashiCorp's own tap since the BSL relicence
 
 # ─── Go toolchain (via Homebrew, not mise — system-wide linters/release tools) ─
 brew 'golangci-lint'  # meta-linter
@@ -52,6 +53,8 @@ brew 'cloudflare-wrangler'
 # ─── Terminal multiplexers ────────────────────────────────────────────────────
 brew 'zellij'         # primary multiplexer (floating panes, layout files)
 brew 'tmux'           # kept for SSH/remote use
+brew 'herdr'          # agent-aware workspace manager; migrating off zellij
+brew 'EzraCerpac/tap/jj-waltz' # `jw` jj-workspace switcher — herdr worktrees are git-only
 
 # ─── Editor ───────────────────────────────────────────────────────────────────
 brew 'neovim' # LazyVim starter installs on first nvim launch

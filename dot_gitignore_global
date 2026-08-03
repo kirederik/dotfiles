@@ -31,3 +31,5 @@ build/
 
 # mise / runtime
 .mise.local.toml
+
+**/.claude/settings.local.json

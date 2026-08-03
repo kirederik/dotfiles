@@ -11,6 +11,7 @@ $golang\
 $rust\
 $python\
 $fill\
+$kubernetes\
 $cmd_duration\
 $line_break\
 $character"""
@@ -68,6 +69,28 @@ symbol = " "
 
 [python]
 symbol = " "
+
+[kubernetes]
+# Off by default in starship, and $kubernetes must also be added to `format`.
+# Always shown (no detect_files/detect_folders) so the target cluster is visible
+# before any kubectl runs, not only inside k8s project dirs.
+disabled = false
+symbol   = "☸ "
+style    = "bold cyan"
+format   = '[$symbol$context( \($namespace\))]($style) '
+
+# EKS contexts are full ARNs, which would swamp the prompt — and the ARN embeds
+# the AWS account ID, which is best kept out of screenshots and screen shares.
+# Red because it is not a throwaway local cluster.
+[[kubernetes.contexts]]
+context_pattern = 'arn:aws:eks:(?P<region>[^:]+):\d+:cluster/(?P<cluster>.+)'
+context_alias   = 'eks/$cluster'
+style           = 'bold red'
+
+# Local kind clusters (kind-platform, kind-worker) are safe to hit.
+[[kubernetes.contexts]]
+context_pattern = 'kind-.*'
+style           = 'bold green'
 
 [cmd_duration]
 min_time = 2_000

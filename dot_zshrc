@@ -64,6 +64,13 @@ export MANPAGER='less -R --use-color -Dd+r -Du+b'
 export EDITOR='nvim'
 export VISUAL='nvim'
 
+# Force emacs line editing at the prompt. zsh auto-selects the *vi* keymap when
+# $EDITOR/$VISUAL matches *vi* — and "nvim" matches — which silently turns ^A,
+# ^E, ^K and ^Y into self-insert. Must run after the plugin manager but before
+# any bindkey below, since -e re-points `main` at the emacs keymap and would
+# discard bindings made into viins.
+bindkey -e
+
 # ─── fzf ──────────────────────────────────────────────────────────────────────
 export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
 export FZF_DEFAULT_OPTS="
@@ -305,15 +312,6 @@ export PATH="$GOPATH/bin:$PATH"
 
 # ─── PATH extras ──────────────────────────────────────────────────────────────
 export PATH="$HOME/.local/bin:$HOME/dev/github.com/syntasso/home-scripts/:$PATH"
-
-# ─── Zellij: restore classic line-nav (must run last, after all plugins) ──────
-# Zellij's config intercepts Ctrl+A/E and writes bytes \x01/\x05 to the PTY
-# (via `Write 1` / `Write 5`), bypassing Ghostty's kitty keyboard protocol.
-# We bind ^A/^E explicitly here — after atuin/fzf/plugins — so nothing overrides them.
-if [[ -n $ZELLIJ ]]; then
-  bindkey '^A' beginning-of-line
-  bindkey '^E' end-of-line
-fi
 
 # ─── Ensure ESC+. / Alt+. inserts last argument (must run last) ───────────────
 # zsh default emacs binding, but plugins can silently clobber it.

@@ -16,7 +16,17 @@ Plugin manager: **antidote** (reads `~/.zsh_plugins.txt`). Prompt: **starship**.
 | `ctrl+k` | Delete to end of line | zsh readline |
 | `alt+.` | Insert last argument | zsh readline |
 
-> `ctrl+a/e/k` are explicitly bound after all plugins to ensure nothing overrides them (especially important inside Zellij).
+> **`bindkey -e` is required, not cosmetic.** zsh auto-selects the *vi* keymap when
+> `$EDITOR`/`$VISUAL` matches `*vi*` — and `nvim` matches. Without an explicit
+> `bindkey -e`, `ctrl+a`, `ctrl+e`, `ctrl+k` and `ctrl+y` silently become
+> `self-insert` (they type the character), `ctrl+u`/`ctrl+w` become their vi
+> variants, and atuin binds `atuin-search-viins`. It must run after the plugin
+> manager but before any `bindkey` call, since `-e` re-points `main` at the emacs
+> keymap and discards bindings previously made into `viins`.
+>
+> This affected every shell, not just Zellij or Herdr ones. It was previously
+> masked by a `[[ -n $ZELLIJ ]]`-gated re-bind of `ctrl+a`/`ctrl+e`, which is why
+> the breakage only became obvious in a Herdr pane.
 
 ---
 

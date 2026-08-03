@@ -53,6 +53,9 @@ Prefix is `Ctrl+Space` — same leader as Zellij's tmux mode, so muscle memory t
 
 | Keys | Action |
 |---|---|
+| `a` / `Shift+A` | Next / previous agent |
+| `Alt+1`–`Alt+9` | Focus agent row N (**left** Option only — `macos-option-as-alt = left`) |
+| `o` | Jump to the last notification's source — the closest thing to "go to what needs me" |
 | `?` | Help |
 | `s` | Settings |
 | `q` | Detach |
@@ -68,6 +71,10 @@ Validate config changes with `herdr server reload-config` — it returns `status
 ## Agent lifecycle
 
 Sidebar states: `idle` (ready for input, tab has been seen), `working`, `blocked` (approval/question UI detected), `done` (idle after unseen background work), `unknown` (agent present but unclassified — **not** proof of completion).
+
+`blocked` is the "waiting on you" state. `prefix+O` jumps to whatever raised the last notification, which requires `[ui.toast] delivery` to be something other than `off` — the default. Whether `next_agent` traverses the attention queue or plain panel order is undocumented; `[ui] agent_panel_sort = "priority"` reorders the panel *into* an attention queue (versus `"spaces"`, grouped by workspace), so flip it if `prefix+a` cycles in an order that doesn't match urgency.
+
+**No nested keybindings.** Herdr has no user-definable sub-modes and no chord sequences — `navigate` (`prefix+g`) and `resize` (`prefix+r`) are hardcoded modes whose local keys can only be remapped. `prefix+a n`, `prefix+a shift+n` and `prefix+a 1..9` are all rejected by the parser with `invalid keybinding … disabling binding`, so agent navigation has to be single-step.
 
 ### Claude Code integration
 

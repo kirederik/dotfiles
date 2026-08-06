@@ -47,6 +47,13 @@ agent_panel_sort = "spaces"
 # Catppuccin Mocha. Mocha pink is high-luminance and unmistakable.
 accent = "#f5c2e7"
 
+# Name the agent on its pane border. There is no config for the *sidebar's*
+# selected-row background or border — the [ui] surface has no selection key and
+# theme.custom only exposes panel_bg, accent, text, red, green, blue, yellow,
+# teal — so the focused pane's accent-coloured border is the strongest
+# "you are here" signal available.
+show_agent_labels_on_pane_borders = true
+
 # Sidebar rows for each space. Herdr's built-in `branch`/`git_status` read git
 # HEAD, which jj parks detached in colocated repos — so they show a bare hash,
 # not the bookmark. The $jj_* tokens come from the mroth.jj-status plugin

@@ -11,7 +11,7 @@ Plugin manager: **antidote** (reads `~/.zsh_plugins.txt`). Prompt: **starship**.
 | `ctrl+t` | Paste file path | fzf |
 | `alt+c` | `cd` into dir | fzf |
 | `↑` / `↓` | Prefix-aware history search | zsh built-in |
-| `ctrl+w` | Delete word backward (stops at `/`) | `WORDCHARS` setting |
+| `ctrl+w` | Delete word backward (stops at `/` and `-`) | `WORDCHARS` setting |
 | `ctrl+a` / `ctrl+e` | Beginning / end of line | zsh readline |
 | `ctrl+k` | Delete to end of line | zsh readline |
 | `alt+.` | Insert last argument | zsh readline |
@@ -27,6 +27,17 @@ Plugin manager: **antidote** (reads `~/.zsh_plugins.txt`). Prompt: **starship**.
 > This affected every shell, not just Zellij or Herdr ones. It was previously
 > masked by a `[[ -n $ZELLIJ ]]`-gated re-bind of `ctrl+a`/`ctrl+e`, which is why
 > the breakage only became obvious in a Herdr pane.
+>
+> **Knock-on effect:** emacs `backward-kill-word` honours `WORDCHARS`, whereas
+> the vi `vi-backward-kill-word` it replaced ignored it and broke on any
+> punctuation. So `ctrl+w` stopping at `-` now depends on `-` being absent from
+> `WORDCHARS` — see the `zsh options` section.
+>
+> **Do not run `bindkey -e` by hand in an already-open shell.** It re-points
+> `main` at a fresh emacs keymap *after* `.zshrc` has bound the arrow keys,
+> discarding them, so `↑` falls back to `up-line-or-history` and cycles all
+> history instead of prefix-searching. Either open a new shell, or follow it
+> with `bindkey '^[[A' up-line-or-beginning-search` and the `^[OA` variant.
 
 ---
 

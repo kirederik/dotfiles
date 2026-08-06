@@ -49,8 +49,14 @@ eval "$(direnv hook zsh)"
 
 
 # ─── zsh options ──────────────────────────────────────────────────────────────
-# Remove / from WORDCHARS so ctrl+w stops at path separators (e.g. deletes only "d" from "a/b/c/d")
-WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
+# Characters listed here count as part of a word, so ctrl+w chews through them.
+# Removed from zsh's default: "/" so ctrl+w stops at path separators (deletes
+# only "d" from "a/b/c/d"), and "-" so it stops at hyphens (deletes only "name"
+# from "feat/some-branch-name", and only "flag" from "--some-flag").
+# This matters more since bindkey -e: emacs backward-kill-word honours
+# WORDCHARS, whereas vi-backward-kill-word ignored it and broke on any
+# punctuation. Drop "." here too if foo.bar.baz should delete piecewise.
+WORDCHARS='*?_.[]~=&;!#$%^(){}<>'
 setopt AUTO_CD          # type a dir name to cd into it
 setopt CORRECT          # suggest correction for mistyped commands
 setopt NO_BEEP          # silence all bells

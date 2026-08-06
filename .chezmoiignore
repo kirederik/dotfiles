@@ -12,3 +12,11 @@ Brewfile
 # live files directly.
 .config/jj/config.toml
 .gitmessage
+
+# App-managed state, not static config: Claude Code itself rewrites this file
+# when you change model, toggle plugins, or edit settings in-app, so chezmoi can
+# never win against it. The tracked copy also deliberately omits the private
+# `ai-os` marketplace (this repo is public), which means applying it would strip
+# ai-os and break those skills. Edit ~/.claude/settings.json directly; the
+# source copy stays as a reference for hooks/statusline on a new machine.
+.claude/settings.json
